@@ -1,5 +1,5 @@
 export const common = {
-    menu: {        
+    menu: {
         home: 'Início',
         tasks: 'Tarefas',
         categories: 'Categorias',
@@ -17,6 +17,7 @@ export const common = {
         dueDate: 'Prazo de Conclusão',
         status: 'Status',
         priority: 'Prioridade',
+        description: 'Descrição',
         actions: 'Ações',
     },
 
@@ -41,5 +42,16 @@ export const common = {
         medium: 'Média',
         low: 'Baixa',
         none: 'Nenhuma',
+    },
+
+    feedback: {
+        taskCreated: 'Tarefa criada com sucesso!',
+        categoryCreated: 'Categoria criada com sucesso!',
+    },
+
+    formats: {
+        date: 'MM/dd/yyyy',
+        dateTime: '{date} ás {time}',
+        time: 'HH:mm',
     },
 };
