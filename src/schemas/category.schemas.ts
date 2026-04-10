@@ -13,5 +13,12 @@ export const createCategoryFormSchema   = object({
   description: string().required('A descrição é obrigatória'),
 });
 
+export const updateCategoryFormSchema   = object({
+  id: string().required(),
+  name: string().required('O nome é obrigatório'),
+  description: string().required('A descrição é obrigatória'),
+});
+
 export type CategoryListItem = InferType<typeof categoryListItemSchema>;
 export type CreateCategoryFormRequest = InferType<typeof createCategoryFormSchema>;
+export type UpdateCategoryFormRequest = InferType<typeof updateCategoryFormSchema>;

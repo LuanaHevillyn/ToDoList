@@ -21,10 +21,6 @@ import { ref } from 'vue';
 
 const dialogRef = ref<QDialog>();
 
-defineProps<{
-  title: string;
-}>();
-
 defineExpose({
   dialogRef,
   show: (e?: Event) => dialogRef.value?.show(e),

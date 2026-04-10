@@ -12,7 +12,7 @@
       <app-table :columns="columns" :rows="categories" :filter="filter">
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn flat no-caps icon="edit" class="q-px-xs" color="grey-10" />
+            <q-btn flat no-caps icon="edit" class="q-px-xs" color="grey-10" @click="onEditCategory(props.row.id)"/>
 
             <q-btn flat no-caps icon="delete_outline" class="q-px-xs" color="deep-orange-14" />
           </q-td>
@@ -23,29 +23,24 @@
 </template>
 
 <script setup lang="ts">
-import AppListPage from 'src/components/AppListPage.vue';
-import SearchField from 'src/components/SearchField.vue';
 import AppButton from 'src/components/AppButton.vue';
+import AppListPage from 'src/components/AppListPage.vue';
 import AppTable from 'src/components/AppTable.vue';
+import CreateCategoryDialog from 'src/components/category/CreateCategoryDialog.vue';
+import EditCategoryDialog from 'src/components/category/EditCategoryDialog.vue';
+import SearchField from 'src/components/SearchField.vue';
 
 import { QTableColumn, useQuasar } from 'quasar';
-import { computed, onMounted, ref } from 'vue';
-import { CategoryListItem } from 'src/schemas/category.schemas';
-import { useI18n } from 'vue-i18n';
-import CategoryFormDialog from 'src/components/CategoryFormDialog.vue';
-import {
-  createCategory,
-  getAllCategories,
-} from 'src/services/category.service';
-import { useHandleAsync } from 'src/helpers/handleAsync.helper';
 import { useDateLocalizer } from 'src/helpers/date.helper';
+import { CategoryListItem } from 'src/schemas/category.schemas';
+import { getAllCategories } from 'src/services/category.service';
+import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const filter = ref('');
 const { t } = useI18n();
 const $q = useQuasar();
-const { handle } = useHandleAsync();
 const formatDate = useDateLocalizer();
-
 const categories = ref<CategoryListItem[]>([]);
 const columns = computed<QTableColumn<CategoryListItem>[]>(() => [
   {
@@ -83,15 +78,18 @@ const columns = computed<QTableColumn<CategoryListItem>[]>(() => [
 
 function onCreateCategory() {
   $q.dialog({
-    component: CategoryFormDialog,
-  }).onOk(async (data) => {
-    const result = await handle(() => createCategory(data), t('common.feedback.categoryCreated'));
-    if (result == null) return;
-    await loadCategories();
-  });
+    component: CreateCategoryDialog,
+  }).onOk(async () => await loadCategories());
 }
 
-const loadCategories = async () => {
+function onEditCategory(categoryId: string) {
+  $q.dialog({
+    component: EditCategoryDialog,
+    componentProps: { categoryId },
+  }).onOk(async () =>  await loadCategories());
+}
+
+const  loadCategories =async () => {
   categories.value = await getAllCategories();
 };
 

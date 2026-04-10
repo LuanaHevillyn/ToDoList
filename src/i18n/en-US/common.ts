@@ -27,6 +27,7 @@ export const common = {
         },
         category: {
             add: 'New Category',
+            edit: 'Edit Category',
         },
     },
 
@@ -46,7 +47,10 @@ export const common = {
 
     feedback: {
         taskCreated: 'Task created successfully!',
-        categoryCreated: 'Category created successfully!',
+        category: {
+            created: 'Category created successfully!',
+            updated: 'Category updated successfully!',
+        }
     },
 
     formats: {
