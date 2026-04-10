@@ -13,8 +13,7 @@
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn flat no-caps icon="edit" class="q-px-xs" color="grey-10" @click="onEditCategory(props.row.id)"/>
-
-            <q-btn flat no-caps icon="delete_outline" class="q-px-xs" color="deep-orange-14" />
+            <q-btn flat no-caps icon="delete_outline" class="q-px-xs" color="deep-orange-14" @click="onDeleteCategory(props.row.id)" />
           </q-td>
         </template>
       </app-table>
@@ -28,6 +27,7 @@ import AppListPage from 'src/components/AppListPage.vue';
 import AppTable from 'src/components/AppTable.vue';
 import CreateCategoryDialog from 'src/components/category/CreateCategoryDialog.vue';
 import EditCategoryDialog from 'src/components/category/EditCategoryDialog.vue';
+import DeleteCategoryDialog from 'src/components/category/DeleteCategoryDialog.vue';
 import SearchField from 'src/components/SearchField.vue';
 
 import { QTableColumn, useQuasar } from 'quasar';
@@ -85,6 +85,13 @@ function onCreateCategory() {
 function onEditCategory(categoryId: string) {
   $q.dialog({
     component: EditCategoryDialog,
+    componentProps: { categoryId },
+  }).onOk(async () =>  await loadCategories());
+}
+
+function onDeleteCategory(categoryId: string) {
+  $q.dialog({
+    component: DeleteCategoryDialog,
     componentProps: { categoryId },
   }).onOk(async () =>  await loadCategories());
 }
