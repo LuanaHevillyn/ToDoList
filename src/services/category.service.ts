@@ -51,3 +51,15 @@ export async function updateCategory(request: UpdateCategoryFormRequest): Promis
 
   localStorage.setItem('Categories', JSON.stringify(categories));
 }
+
+export async function deleteCategory(id: string): Promise<void> {
+  const categories = await getAllCategories();
+  const index = categories.findIndex(category => category.id === id);
+  if (index === -1) throw new Error('Categoria não encontrada');
+  
+  const category = categories[index];
+  if (category.numberOfTasks > 0) throw new Error('Existem tarefas vinculadas a essa categoria');
+
+  categories.splice(index, 1);
+  localStorage.setItem('Categories', JSON.stringify(categories));
+}

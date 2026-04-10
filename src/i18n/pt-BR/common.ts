@@ -28,6 +28,7 @@ export const common = {
         category: {
             add: 'Nova Categoria',
             edit: 'Editar Categoria',
+            delete: 'Excluir Categoria',
         },
     },
 
@@ -50,6 +51,7 @@ export const common = {
         category: {
             created: 'Categoria criada com sucesso!',
             updated: 'Categoria editada com sucesso!',
+            deleted: 'Categoria deletada com sucesso!',
         }
     },
 
