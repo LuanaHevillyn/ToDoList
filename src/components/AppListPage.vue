@@ -5,7 +5,7 @@
       <slot name="actions" />
     </div>
 
-    <q-separator class="q-my-md" />
+    <q-separator class="q-my-md bg-grey-5" v-if="hasSeparator" />
 
     <slot name="table" />
   </q-page>
@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { QPageProps } from 'quasar';
 
-defineProps<QPageProps>();
+withDefaults(defineProps<QPageProps & { hasSeparator?: boolean }>(), { hasSeparator: false });
 </script>
 
 <style scoped lang="scss">

@@ -1,5 +1,5 @@
 <template>
-    <app-dialog ref="dialogRef" persistent maxWidth="600px">
+    <app-dialog ref="dialogRef" persistent>
         <template #title>
             <div class="title-container">
                 <q-avatar size="100px" round color="deep-orange-2" text-color="red-5" icon="delete" />

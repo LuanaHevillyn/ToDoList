@@ -8,16 +8,18 @@ export const common = {
     titles: {
         task: 'Tasks',
         category: 'Categories',
+        history: 'History of {entity}',
     },
 
     fields: {
         name: 'Name',
         createdAt: 'Creation Date',
-        numberOfTasks: 'NNumber of Tasks',
+        numberOfTasks: 'Number of Tasks',
         dueDate: 'Due Date',
         status: 'Status',
         priority: 'Priority',
         description: 'Description',
+        datetime: 'Date and Time',    
         actions: 'Actions',
     },
 
@@ -29,6 +31,7 @@ export const common = {
             add: 'New Category',
             edit: 'Edit Category',
             delete: 'Delete Category',
+            history: 'View History',
         },
     },
 
@@ -59,5 +62,18 @@ export const common = {
         date: 'MM/dd/yyyy',
         dateTime: '{date} at {time}',
         time: 'HH:mm',
+    },
+
+    history: {
+        create: '{entity} created.',
+        update: '{entity} updated.',
+        delete: '{entity} deleted.',
+
+        category: {
+            created: 'Category "{name}" was created.',
+            nameUpdated: 'Name changed from "{oldName}" to "{newName}".',
+            descriptionUpdated: 'Description changed from "{oldDescription}" to "{newDescription}".',
+            deleted: 'Category "{name}" was deleted.',
+        }
     },
 };

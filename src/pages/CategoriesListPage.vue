@@ -1,5 +1,5 @@
 <template>
-  <app-list-page>
+  <app-list-page has-separator>
     <template #title>
       <span class="text-h4">{{ $t('common.titles.category') }}</span>
     </template>
@@ -12,11 +12,13 @@
       <app-table :columns="columns" :rows="categories" :filter="filter">
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn flat no-caps icon="edit" class="q-px-xs" color="grey-10" @click="onEditCategory(props.row.id)"/>
-            <q-btn flat no-caps icon="delete_outline" class="q-px-xs" color="deep-orange-14" @click="onDeleteCategory(props.row.id)" />
+            <app-button flat no-caps icon="edit" class="q-px-xs" color="grey-10" @click="onEditCategory(props.row.id)"/>
+            <app-button flat no-caps icon="delete_outline" class="q-px-xs" color="deep-orange-14" @click="onDeleteCategory(props.row.id)" />
           </q-td>
         </template>
       </app-table>
+      <app-button class="q-mt-sm" flat color="deep-purple-6" :label="$t('common.actions.category.history')" no-caps
+        icon="bi-hourglass-split" @click="onHistory" />
     </template>
   </app-list-page>
 </template>
@@ -29,6 +31,7 @@ import CreateCategoryDialog from 'src/components/category/CreateCategoryDialog.v
 import EditCategoryDialog from 'src/components/category/EditCategoryDialog.vue';
 import DeleteCategoryDialog from 'src/components/category/DeleteCategoryDialog.vue';
 import SearchField from 'src/components/SearchField.vue';
+import CategoriesHistoryDialog from 'src/components/category/CategoriesHistoryDialog.vue';
 
 import { QTableColumn, useQuasar } from 'quasar';
 import { useDateLocalizer } from 'src/helpers/date.helper';
@@ -94,6 +97,12 @@ function onDeleteCategory(categoryId: string) {
     component: DeleteCategoryDialog,
     componentProps: { categoryId },
   }).onOk(async () =>  await loadCategories());
+}
+
+function onHistory() {
+  $q.dialog({
+    component: CategoriesHistoryDialog,
+  });
 }
 
 const  loadCategories =async () => {
