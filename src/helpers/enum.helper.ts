@@ -1,0 +1,33 @@
+import { CategoryField, HistoryAction, HistoryListItem } from 'src/schemas/history.schemas';
+import { useI18n } from 'vue-i18n';
+
+export function getHistoryType(actionType: HistoryAction, entity: string): string {
+    const { t } = useI18n();
+
+    return t(`common.history.${actionType.toLowerCase()}`, { entity });
+}
+
+export function getHistoryMessage(row: HistoryListItem): string {
+    const { t } = useI18n();
+    const name = row.categoryName;
+    const field = row.actionDescription;
+
+    const fieldMap = {
+        [CategoryField.NAME]: () =>
+            t('common.history.category.nameUpdated', {
+                oldName: field?.oldValue,
+                newName: field?.newValue,
+            }),
+
+        [CategoryField.DESCRIPTION]: () =>
+            t('common.history.category.descriptionUpdated', {
+                oldDescription: field?.oldValue,
+                newDescription: field?.newValue,
+            }),
+    };
+
+    if (row.actionType === HistoryAction.CREATE) return t('common.history.category.created', { name });
+    if (row.actionType === HistoryAction.UPDATE && field?.field) return fieldMap[field.field]?.() ?? '';
+    if (row.actionType === HistoryAction.DELETE) return t('common.history.category.deleted', { name });
+    return '';
+}

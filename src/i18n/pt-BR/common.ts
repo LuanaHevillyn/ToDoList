@@ -7,7 +7,8 @@ export const common = {
 
     titles: {
         task: 'Tarefas',
-        category: 'Categorias',
+        category: 'Categorias | Categoria',
+        history: 'Histórico de {entity}',
     },
 
     fields: {
@@ -17,8 +18,9 @@ export const common = {
         dueDate: 'Prazo de Conclusão',
         status: 'Status',
         priority: 'Prioridade',
-        description: 'Descrição',
-        actions: 'Ações',
+        description: 'Descrição',    
+        datetime: 'Data e Hora',    
+        actions: 'Ações | Ação',
     },
 
     actions: {
@@ -29,6 +31,7 @@ export const common = {
             add: 'Nova Categoria',
             edit: 'Editar Categoria',
             delete: 'Excluir Categoria',
+            history: 'Ver Histórico',
         },
     },
 
@@ -59,5 +62,18 @@ export const common = {
         date: 'MM/dd/yyyy',
         dateTime: '{date} ás {time}',
         time: 'HH:mm',
+    },
+
+    history: {
+        create: '{entity} criada.',
+        update: '{entity} atualizada.',
+        delete: '{entity} excluída.',
+
+        category: {
+            created: 'A categoria "{name}" foi criada.',
+            nameUpdated: 'Nome alterado de "{oldName}" para "{newName}".',
+            descriptionUpdated: 'Descrição alterada de "{oldDescription}" para "{newDescription}".',
+            deleted: 'A categoria "{name}" foi deletada.',
+        }
     },
 };

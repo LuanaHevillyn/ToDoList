@@ -1,6 +1,6 @@
 <template>
   <q-dialog ref="dialogRef" class="app-dialog" persistent>
-    <q-card class="q-pa-lg" bordered>
+    <q-card class="q-pa-lg" bordered :style="{ maxWidth: maxWidth }">
 
       <div class="q-mb-md flex">
         <slot name="title"></slot>
@@ -20,6 +20,7 @@ import { QDialog } from 'quasar';
 import { ref } from 'vue';
 
 const dialogRef = ref<QDialog>();
+withDefaults(defineProps<{ maxWidth?: string }>(), { maxWidth: '600px' });
 
 defineExpose({
   dialogRef,

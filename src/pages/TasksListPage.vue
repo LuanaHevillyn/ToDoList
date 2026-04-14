@@ -1,5 +1,5 @@
 <template>
-  <app-list-page>
+  <app-list-page has-separator>
     <template #title>
       <span class="text-h4">{{ $t('common.titles.task') }}</span>
     </template>

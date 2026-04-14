@@ -1,5 +1,5 @@
 <template>
-    <app-dialog ref="dialogRef" persistent maxWidth="600px">
+    <app-dialog ref="dialogRef" persistent>
         <template #title>
             <div class="row items-center q-gutter-md">
                 <q-avatar rounded color="deep-purple-1" text-color="deep-purple-6" icon="edit" />
