@@ -23,6 +23,16 @@ export const common = {
         actions: 'Actions',
     },
 
+    validation: {
+        name: ' Name is required ',
+        dueDate: 'Due Date is required',
+        dueDateInvalid: 'Select a valid date',
+        priority: 'Priority is required',
+        priorityInvalid: 'Select a valid priority',
+        description: 'Description is required',
+        category: 'Category is required',
+    },
+
     actions: {
         task: {
             add: 'New Task',
@@ -50,7 +60,9 @@ export const common = {
     },
 
     feedback: {
-        taskCreated: 'Task created successfully!',
+        task: {
+            created: 'Task created successfully!',
+        },        
         category: {
             created: 'Category created successfully!',
             updated: 'Category updated successfully!',
@@ -68,12 +80,20 @@ export const common = {
         create: '{entity} created.',
         update: '{entity} updated.',
         delete: '{entity} deleted.',
+        increment: 'Number of tasks updated.',
 
         category: {
             created: 'Category "{name}" was created.',
             nameUpdated: 'Name changed from "{oldName}" to "{newName}".',
             descriptionUpdated: 'Description changed from "{oldDescription}" to "{newDescription}".',
             deleted: 'Category "{name}" was deleted.',
+            incremented: 'Number of tasks of category "{name}" was incremented.',
         }
     },
+
+    taskPriority: {
+        high: 'High',
+        medium: 'Medium',
+        low: 'Low',
+    }
 };

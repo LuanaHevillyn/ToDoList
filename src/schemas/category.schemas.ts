@@ -9,14 +9,14 @@ export const categoryListItemSchema = object({
 });
 
 export const createCategoryFormSchema   = object({
-  name: string().required('O nome é obrigatório'),
-  description: string().required('A descrição é obrigatória'),
+  name: string().required('name'),
+  description: string().required('description'),
 });
 
 export const updateCategoryFormSchema   = object({
   id: string().required(),
-  name: string().required('O nome é obrigatório'),
-  description: string().required('A descrição é obrigatória'),
+  name: string().required('name'),
+  description: string().required('description'),
 });
 
 export type CategoryListItem = InferType<typeof categoryListItemSchema>;

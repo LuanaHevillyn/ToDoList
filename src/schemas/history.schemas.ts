@@ -4,6 +4,7 @@ export enum HistoryAction {
   CREATE = 'CREATE',
   UPDATE = 'UPDATE',
   DELETE = 'DELETE',
+  INCREMENT = 'INCREMENT',
 }
 
 export enum CategoryField {
@@ -24,7 +25,7 @@ export const historyListItemSchema = object({
   actionDescription: object({
     field: mixed<CategoryField>().oneOf(Object.values(CategoryField)).notRequired(),
     oldValue: string().nullable(),
-    newValue: string().required(),
+    newValue: string().nullable(),
   }).default({}),
 });
 

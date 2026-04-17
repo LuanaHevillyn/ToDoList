@@ -23,6 +23,16 @@ export const common = {
         actions: 'Ações | Ação',
     },
 
+    validation: {
+        name: 'Nome é obrigatório',
+        dueDate: 'Prazo de conclusão é obrigatório',
+        dueDateInvalid: 'Selecione uma data válida',
+        priority: 'Prioridade é obrigatória',
+        priorityInvalid: 'Selecione uma prioridade válida',
+        description: 'Descrição é obrigatória',
+        category: 'Categoria é obrigatória',
+    },
+
     actions: {
         task: {
             add: 'Nova Tarefa',
@@ -50,7 +60,9 @@ export const common = {
     },
 
     feedback: {
-        taskCreated: 'Tarefa criada com sucesso!',
+        task: {
+            created: 'Tarefa criada com sucesso!',
+        },
         category: {
             created: 'Categoria criada com sucesso!',
             updated: 'Categoria editada com sucesso!',
@@ -59,7 +71,7 @@ export const common = {
     },
 
     formats: {
-        date: 'MM/dd/yyyy',
+        date: 'dd/MM/yyyy',
         dateTime: '{date} ás {time}',
         time: 'HH:mm',
     },
@@ -68,12 +80,14 @@ export const common = {
         create: '{entity} criada.',
         update: '{entity} atualizada.',
         delete: '{entity} excluída.',
+        increment: 'Número de tarefas atualizado.',
 
         category: {
             created: 'A categoria "{name}" foi criada.',
             nameUpdated: 'Nome alterado de "{oldName}" para "{newName}".',
             descriptionUpdated: 'Descrição alterada de "{oldDescription}" para "{newDescription}".',
             deleted: 'A categoria "{name}" foi deletada.',
+            incremented: 'A contagem de tarefas da categoria "{name}" foi incrementado.',
         }
     },
 };

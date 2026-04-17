@@ -64,6 +64,7 @@ const { handle } = useHandleAsync();
 const { t } = useI18n();
 
 async function onSubmit() {
+    errors.value = {};
     const data = {
         name: categoryName.value,
         description: categoryDescription.value,
@@ -77,7 +78,7 @@ async function onSubmit() {
         if (err instanceof ValidationError) {
             err.inner.forEach((e) => {
                 const field = e.path as keyof typeof errors.value;
-                errors.value[field] = e.message;
+                errors.value[field] = t(`common.validation.${e.message}`);
             });
         }
     }

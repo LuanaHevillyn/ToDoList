@@ -109,6 +109,7 @@ function getHistoryActionIcon(priority: string): string {
     if (priority === HistoryAction.CREATE) return 'bi-plus-circle-fill';
     if (priority === HistoryAction.UPDATE) return 'edit';
     if (priority === HistoryAction.DELETE) return 'delete';
+    if (priority === HistoryAction.INCREMENT) return 'add';
     return '';
 }
 
