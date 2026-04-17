@@ -5,7 +5,7 @@
                 <q-avatar rounded color="deep-purple-1" text-color="deep-purple-6" icon="bi-tags" />
 
                 <div class="column">
-                    <span class="text-h5">{{ $t('common.actions.category.add') }}</span>
+                    <span class="text-h5">{{ $t('common.actions.task.add') }}</span>
                     <span class="text-caption text-grey-7">
                         Preencha os campos para adicionar uma nova tarefa
                     </span>
