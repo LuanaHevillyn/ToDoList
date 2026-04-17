@@ -10,21 +10,22 @@
         icon="add"
         :label="$t('common.actions.task.add')"
         class="q-py-sm"
+        @click="onCreateTask"
       />
     </template>
 
     <template #table>
-      <app-table :columns="columns" :rows="rows" :filter="filter">
+      <app-table :columns="columns" :rows="tasks" :filter="filter">
         <template v-slot:body-cell-priority="props">
           <q-td :props="props">
             <q-badge
               align="middle"
               dense
               rounded
-              :color="getPriorityColor(props.row.priority).color"
+              :color="getPriority(props.row.priority).color"
             >
               <q-icon
-                :name="getPriorityColor(props.row.priority).icon"
+                :name="getPriority(props.row.priority).icon"
                 color="white"
               />
             </q-badge>
@@ -37,14 +38,14 @@
             <q-badge
               align="middle"
               rounded
-              :color="getStatusColor(props.row.status).color"
+              :color="getStatus(props.row.status).color"
             >
               <q-icon
-                :name="getStatusColor(props.row.status).icon"
+                :name="getStatus(props.row.status).icon"
                 color="white"
                 class="q-mr-xs"
               />
-              {{ props.value }}
+              {{ props.value.label }}
             </q-badge>
           </q-td>
         </template>
@@ -70,47 +71,37 @@
 </template>
 
 <script setup lang="ts">
-import AppListPage from 'src/components/AppListPage.vue';
-import SearchField from 'src/components/SearchField.vue';
 import AppButton from 'src/components/AppButton.vue';
+import AppListPage from 'src/components/AppListPage.vue';
 import AppTable from 'src/components/AppTable.vue';
+import CreateTaskDialog from 'src/components/task/CreateTaskDialog.vue';
+import SearchField from 'src/components/SearchField.vue';
 
-import { QTableColumn } from 'quasar';
-import { computed, ref } from 'vue';
-import { TaskListItem } from 'src/schemas/task.schemas';
+import { QTableColumn, useQuasar } from 'quasar';
+import { Priority, Status, TaskListItem } from 'src/schemas/task.schemas';
+import { getAllTasks } from 'src/services/task.service';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useDateLocalizer } from 'src/helpers/date.helper';
 
 const filter = ref('');
 const { t } = useI18n();
+const $q = useQuasar();
+const formatDate = useDateLocalizer();
+const tasks = ref<TaskListItem[]>([]);
 
-function getPriorityColor(priority: string): { color: string; icon: string } {
-  if (priority === 'high')
-    return { color: 'deep-orange-14', icon: 'keyboard_double_arrow_up' };
-  if (priority === 'medium') return { color: 'orange', icon: 'arrow_drop_up' };
-  if (priority === 'low') return { color: 'green', icon: 'remove' };
-  return { color: 'green', icon: 'remove' };
+function getPriority(priority: string): { color: string; icon: string, label: string } {
+  if (priority === Priority.HIGH) return  { color: 'deep-orange-14', icon: 'keyboard_double_arrow_up', label: t('common.priority.high')};
+  if (priority === Priority.MEDIUM) return { color: 'orange', icon: 'arrow_drop_up', label: t('common.priority.medium')};
+  if (priority === Priority.LOW) return { color: 'green', icon: 'remove', label: t('common.priority.low')};
+  return { color: 'green', icon: 'remove', label: t('common.priority.none')};
 }
 
-function getPriorityLabel(priority: string): string {
-  if (priority === 'high') return t('common.priority.high');
-  if (priority === 'medium') return t('common.priority.medium');
-  if (priority === 'low') return t('common.priority.low');
-  return t('common.priority.none');
-}
-
-function getStatusColor(status: string): { color: string; icon: string } {
-  if (status === 'Completed') return { color: 'green', icon: 'check' };
-  if (status === 'InProgress')
-    return { color: 'orange', icon: 'hourglass_bottom' };
-  if (status === 'Pending') return { color: 'deep-orange-14', icon: 'warning' };
-  return { color: 'grey', icon: '' };
-}
-
-function getStatusLabel(status: string): string {
-  if (status === 'Completed') return t('common.status.completed');
-  if (status === 'InProgress') return t('common.status.inProgress');
-  if (status === 'Pending') return t('common.status.pending');
-  return t('common.status.none');
+function getStatus(status: string): { color: string; icon: string, label: string } {
+  if (status === Status.COMPLETED) return { color: 'green', icon: 'check', label: t('common.status.completed')};
+  if (status === Status.IN_PROGRESS) return { color: 'orange', icon: 'hourglass_bottom', label: t('common.status.inProgress')};
+  if (status === Status.PENDING) return { color: 'deep-orange-14', icon: 'warning', label: t('common.status.pending')};
+  return { color: 'grey', icon: '', label: t('common.status.none')};
 }
 
 const columns = computed<QTableColumn<TaskListItem>[]>(() => [
@@ -123,25 +114,25 @@ const columns = computed<QTableColumn<TaskListItem>[]>(() => [
   {
     name: 'priority',
     label: t('common.fields.priority'),
-    field: (row) => getPriorityLabel(row.priority),
+    field: (row) => getPriority(row.priority).label,
     align: 'left',
   },
   {
     name: 'category',
-    label: t('common.titles.category'),
+    label: t('common.titles.category', 2),
     field: 'category',
     align: 'center',
   },
   {
     name: 'dueDate',
     label: t('common.fields.dueDate'),
-    field: (row) => row.dueDate.toLocaleDateString(),
+    field: (row) => formatDate.value(row.dueDate),
     align: 'center',
   },
   {
     name: 'status',
     label: t('common.fields.status'),
-    field: (row) => getStatusLabel(row.status),
+    field: (row) => getStatus(row.status),
     align: 'center',
   },
   {
@@ -153,78 +144,19 @@ const columns = computed<QTableColumn<TaskListItem>[]>(() => [
   },
 ]);
 
-const rows = [
-  {
-    name: 'Frozen Yogurt',
-    category: 'Natação',
-    status: 'InProgress',
-    priority: 'high',
-    dueDate: new Date(),
-  },
-  {
-    name: 'Ice cream sandwich',
-    category: 'Estudos',
-    status: 'Completed',
-    priority: 'medium',
-    dueDate: new Date(),
-  },
-  {
-    name: 'Eclair',
-    category: 'Trabalho',
-    status: 'InProgress',
-    priority: 'low',
-    dueDate: new Date(),
-  },
-  {
-    name: 'Cupcake',
-    category: 'Esportes',
-    status: 'Pending',
-    priority: 'high',
-    dueDate: new Date(),
-  },
-  {
-    name: 'Gingerbread',
-    category: 'Leitura',
-    status: 'Completed',
-    priority: 'medium',
-    dueDate: new Date(),
-  },
-  {
-    name: 'Jelly bean',
-    category: 'Trabalho',
-    status: 'Pending',
-    priority: 'high',
-    dueDate: new Date(),
-  },
-  {
-    name: 'Lollipop',
-    category: 'Natação',
-    status: 'InProgress',
-    priority: 'high',
-    dueDate: new Date(),
-  },
-  {
-    name: 'Honeycomb',
-    category: 'Estudos',
-    status: 'InProgress',
-    priority: 'high',
-    dueDate: new Date(),
-  },
-  {
-    name: 'Donut',
-    category: 'Trabalho',
-    status: 'Completed',
-    priority: 'high',
-    dueDate: new Date(),
-  },
-  {
-    name: 'KitKat',
-    category: 'Trabalho',
-    status: 'Completed',
-    priority: 'high',
-    dueDate: new Date(),
-  },
-];
+function onCreateTask() {
+  $q.dialog({
+    component: CreateTaskDialog,
+  }).onOk(async () => await loadTasks());
+}
+
+const loadTasks = async () => {
+  tasks.value = await getAllTasks();
+};
+
+onMounted(() => {
+  loadTasks();
+});
 </script>
 
 <style lang="scss" scoped>

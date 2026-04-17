@@ -131,3 +131,22 @@ function addHistoryItem(item: HistoryListItem) {
   categoriesHistories.push(item);
   localStorage.setItem('CategoriesHistories', JSON.stringify(categoriesHistories));
 }
+
+export async function incrementCategoryTaskCount(id: string): Promise<void> {
+  const categories = await getAllCategories();
+  const index = categories.findIndex(category => category.id === id);
+  if (index === -1) throw new Error('Categoria não encontrada');
+
+  categories[index].numberOfTasks += 1;
+  localStorage.setItem('Categories', JSON.stringify(categories));
+  addIncrementTaskCountActionToHistory(categories[index], HistoryAction.INCREMENT)
+}
+
+function addIncrementTaskCountActionToHistory(category: CategoryListItem, actionType: HistoryAction) {
+  addHistoryItem({
+    actionDescription: {},
+    categoryName: category.name,
+    dateTime: new Date(),
+    actionType,
+  });
+}

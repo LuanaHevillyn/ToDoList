@@ -29,5 +29,6 @@ export function getHistoryMessage(row: HistoryListItem): string {
     if (row.actionType === HistoryAction.CREATE) return t('common.history.category.created', { name });
     if (row.actionType === HistoryAction.UPDATE && field?.field) return fieldMap[field.field]?.() ?? '';
     if (row.actionType === HistoryAction.DELETE) return t('common.history.category.deleted', { name });
+    if (row.actionType === HistoryAction.INCREMENT) return t('common.history.category.incremented', { name });
     return '';
 }
