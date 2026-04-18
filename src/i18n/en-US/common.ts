@@ -33,16 +33,36 @@ export const common = {
         category: 'Category is required',
     },
 
+    placeholder: {
+        name: 'Enter the name',
+        priority: 'Select the priority',
+        dueDate: 'Select the due date',
+        description: 'Enter the description',
+        category: 'Select the category',
+    },
+
     actions: {
         task: {
             add: 'New Task',
+            addDescription: 'Fill in the fields to add a task.',
         },
         category: {
             add: 'New Category',
+            addDescription: 'Fill in the fields to add a category.',
+
             edit: 'Edit Category',
+            editDescription: 'Fill in the fields to edit the selected category.',
+
             delete: 'Delete Category',
+            deleteQuestion: 'Are you sure you want to delete the category?',
+            deleteWarning: 'This action cannot be undone.',
+
             history: 'View History',
         },
+
+        save: 'Save',
+        cancel: 'Cancel',
+        confirm: 'Confirm',
     },
 
     status: {
@@ -90,10 +110,4 @@ export const common = {
             incremented: 'Number of tasks of category "{name}" was incremented.',
         }
     },
-
-    taskPriority: {
-        high: 'High',
-        medium: 'Medium',
-        low: 'Low',
-    }
 };

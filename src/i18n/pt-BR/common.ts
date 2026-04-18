@@ -33,16 +33,37 @@ export const common = {
         category: 'Categoria é obrigatória',
     },
 
+    placeholder: {
+        name: 'Digite o nome',
+        priority: 'Selecione a prioridade',
+        dueDate: 'Selecione o prazo de conclusão',
+        description: 'Digite a descrição',
+        category: 'Selecione a categoria',
+    },
+
     actions: {
         task: {
             add: 'Nova Tarefa',
+            addDescription: 'Preencha os campos para adicionar uma tarefa.',
         },
         category: {
             add: 'Nova Categoria',
+            addDescription: 'Preencha os campos para adicionar uma categoria.',
+
             edit: 'Editar Categoria',
+            editDescription: 'Preencha os campos para editar a categoria selecionada.',
+
             delete: 'Excluir Categoria',
+            deleteQuestion: 'Tem certeza que deseja excluir a categoria?',
+            deleteWarning: 'Essa ação não poderá ser desfeita.',
+
             history: 'Ver Histórico',
         },
+
+        save: 'Salvar',
+        cancel: 'Cancelar',
+        confirm: 'Confirmar',
+        close: 'Fechar',  
     },
 
     status: {

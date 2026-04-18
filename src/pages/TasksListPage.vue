@@ -52,11 +52,23 @@
 
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn flat no-caps icon="done_outline" class="q-px-xs" color="light-green-10" />
+            <app-button
+              flat
+              no-caps
+              icon="done_outline"
+              class="q-px-xs"
+              color="light-green-10"
+            />
 
-            <q-btn flat no-caps icon="create" class="q-px-xs" color="grey-9" />
+            <app-button
+              flat
+              no-caps
+              icon="create"
+              class="q-px-xs"
+              color="grey-9"
+            />
 
-            <q-btn
+            <app-button
               flat
               no-caps
               icon="delete_outline"
@@ -90,18 +102,52 @@ const $q = useQuasar();
 const formatDate = useDateLocalizer();
 const tasks = ref<TaskListItem[]>([]);
 
-function getPriority(priority: string): { color: string; icon: string, label: string } {
-  if (priority === Priority.HIGH) return  { color: 'deep-orange-14', icon: 'keyboard_double_arrow_up', label: t('common.priority.high')};
-  if (priority === Priority.MEDIUM) return { color: 'orange', icon: 'arrow_drop_up', label: t('common.priority.medium')};
-  if (priority === Priority.LOW) return { color: 'green', icon: 'remove', label: t('common.priority.low')};
-  return { color: 'green', icon: 'remove', label: t('common.priority.none')};
+function getPriority(priority: string): {
+  color: string;
+  icon: string;
+  label: string;
+} {
+  if (priority === Priority.HIGH)
+    return {
+      color: 'deep-orange-14',
+      icon: 'keyboard_double_arrow_up',
+      label: t('common.priority.high'),
+    };
+  if (priority === Priority.MEDIUM)
+    return {
+      color: 'orange',
+      icon: 'arrow_drop_up',
+      label: t('common.priority.medium'),
+    };
+  if (priority === Priority.LOW)
+    return { color: 'green', icon: 'remove', label: t('common.priority.low') };
+  return { color: 'green', icon: 'remove', label: t('common.priority.none') };
 }
 
-function getStatus(status: string): { color: string; icon: string, label: string } {
-  if (status === Status.COMPLETED) return { color: 'green', icon: 'check', label: t('common.status.completed')};
-  if (status === Status.IN_PROGRESS) return { color: 'orange', icon: 'hourglass_bottom', label: t('common.status.inProgress')};
-  if (status === Status.PENDING) return { color: 'deep-orange-14', icon: 'warning', label: t('common.status.pending')};
-  return { color: 'grey', icon: '', label: t('common.status.none')};
+function getStatus(status: string): {
+  color: string;
+  icon: string;
+  label: string;
+} {
+  if (status === Status.COMPLETED)
+    return {
+      color: 'green',
+      icon: 'check',
+      label: t('common.status.completed'),
+    };
+  if (status === Status.IN_PROGRESS)
+    return {
+      color: 'orange',
+      icon: 'hourglass_bottom',
+      label: t('common.status.inProgress'),
+    };
+  if (status === Status.PENDING)
+    return {
+      color: 'deep-orange-14',
+      icon: 'warning',
+      label: t('common.status.pending'),
+    };
+  return { color: 'grey', icon: '', label: t('common.status.none') };
 }
 
 const columns = computed<QTableColumn<TaskListItem>[]>(() => [

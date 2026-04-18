@@ -20,6 +20,6 @@ export function useDateTimeLocalizer() {
       t('common.formats.dateTime', {
         date: format(date, dateFormat),
         time: format(date, 'HH:mm'),
-    });
+      });
   });
 }
