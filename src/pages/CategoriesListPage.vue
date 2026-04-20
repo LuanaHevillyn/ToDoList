@@ -14,7 +14,12 @@
     </template>
 
     <template #table>
-      <app-table :columns="columns" :rows="categories" :filter="filter">
+      <app-table
+        :columns="columns"
+        :rows="categories"
+        :filter="filter"
+        :pagination="pagination"
+      >
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <app-button
@@ -71,6 +76,7 @@ const { t } = useI18n();
 const $q = useQuasar();
 const formatDate = useDateLocalizer();
 const categories = ref<CategoryListItem[]>([]);
+const pagination = { sortBy: 'dateTime', descending: true };
 const columns = computed<QTableColumn<CategoryListItem>[]>(() => [
   {
     name: 'name',
@@ -87,8 +93,11 @@ const columns = computed<QTableColumn<CategoryListItem>[]>(() => [
   {
     name: 'createdAt',
     label: t('common.fields.createdAt'),
-    field: (row) => formatDate.value(row.createdAt),
+    field: 'createdAt',
     align: 'center',
+    format: (val) => formatDate.value(val),
+    sortable: true,
+    sort: (a, b) => new Date(b).getTime() - new Date(a).getTime(),
   },
   {
     name: 'numberOfTasks',

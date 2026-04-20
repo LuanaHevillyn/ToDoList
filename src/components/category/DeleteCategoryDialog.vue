@@ -18,8 +18,8 @@
 
     <template #form>
       <div class="row justify-center q-my-lg">
-        <span>{{ $t('common.actions.category.deleteQuestion') }} </span
-        ><strong class="text-weight-medium">{{ categoryDetail?.name }}</strong>
+        <span>{{ $t('common.actions.category.deleteQuestion', { name: categoryDetail?.name}) }} </span
+        >
         <span class="q-mt-sm">{{
           $t('common.actions.category.deleteWarning')
         }}</span>

@@ -19,7 +19,7 @@ export const common = {
         status: 'Status',
         priority: 'Priority',
         description: 'Description',
-        datetime: 'Date and Time',    
+        datetime: 'Date and Time',
         actions: 'Actions',
     },
 
@@ -45,6 +45,9 @@ export const common = {
         task: {
             add: 'New Task',
             addDescription: 'Fill in the fields to add a task.',
+
+            edit: 'Edit Task',
+            editDescription: 'Fill in the fields to edit the selected task.'
         },
         category: {
             add: 'New Category',
@@ -54,7 +57,7 @@ export const common = {
             editDescription: 'Fill in the fields to edit the selected category.',
 
             delete: 'Delete Category',
-            deleteQuestion: 'Are you sure you want to delete the category?',
+            deleteQuestion: 'Are you sure you want to delete the category "{name}"?',
             deleteWarning: 'This action cannot be undone.',
 
             history: 'View History',
@@ -63,9 +66,11 @@ export const common = {
         save: 'Save',
         cancel: 'Cancel',
         confirm: 'Confirm',
+        close: 'Close',
     },
 
     status: {
+        delayed: 'Delayed',
         completed: 'Completed',
         inProgress: 'In Progress',
         pending: 'Pending',
@@ -82,7 +87,8 @@ export const common = {
     feedback: {
         task: {
             created: 'Task created successfully!',
-        },        
+            updated: 'Task updated successfully!',
+        },
         category: {
             created: 'Category created successfully!',
             updated: 'Category updated successfully!',
@@ -97,10 +103,13 @@ export const common = {
     },
 
     history: {
-        create: '{entity} created.',
-        update: '{entity} updated.',
-        delete: '{entity} deleted.',
-        increment: 'Number of tasks updated.',
+        action: {
+            create: '{entity} created.',
+            update: '{entity} updated.',
+            delete: '{entity} deleted.',
+            increment: 'Number of tasks increased.',
+            decrement: 'Number of tasks decreased.',
+        },
 
         category: {
             created: 'Category "{name}" was created.',
@@ -108,6 +117,7 @@ export const common = {
             descriptionUpdated: 'Description changed from "{oldDescription}" to "{newDescription}".',
             deleted: 'Category "{name}" was deleted.',
             incremented: 'Number of tasks of category "{name}" was incremented.',
+            decremented: 'Number of tasks of category "{name}" was decremented.',
         }
     },
 };

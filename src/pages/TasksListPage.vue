@@ -15,7 +15,12 @@
     </template>
 
     <template #table>
-      <app-table :columns="columns" :rows="tasks" :filter="filter">
+      <app-table
+        :columns="columns"
+        :rows="tasks"
+        :filter="filter"
+        :pagination="pagination"
+      >
         <template v-slot:body-cell-priority="props">
           <q-td :props="props">
             <q-badge
@@ -30,6 +35,12 @@
               />
             </q-badge>
             {{ props.value }}
+          </q-td>
+        </template>
+
+        <template v-slot:body-cell-category="props">
+          <q-td :props="props">
+            {{ props.value.name }}
           </q-td>
         </template>
 
@@ -58,14 +69,35 @@
               icon="done_outline"
               class="q-px-xs"
               color="light-green-10"
-            />
+              v-if="
+                props.row.status === Status.IN_PROGRESS ||
+                props.row.status === Status.DELAYED
+              "
+              @click="onCompleteTask(props.row.id)"
+            >
+              <q-tooltip>Concluir tarefa</q-tooltip>
+            </app-button>
 
             <app-button
               flat
               no-caps
-              icon="create"
+              icon="bi-play"
+              class="q-px-xs"
+              color="light-green-10"
+              v-if="props.row.status === Status.PENDING"
+              @click="onStartTask(props.row.id)"
+            >
+              <q-tooltip>Começar tarefa</q-tooltip>
+            </app-button>
+
+            <app-button
+              flat
+              no-caps
+              icon="edit"
               class="q-px-xs"
               color="grey-9"
+              v-if="props.row.status !== Status.COMPLETED"
+              @click="onEditTask(props.row.id)"
             />
 
             <app-button
@@ -86,8 +118,10 @@
 import AppButton from 'src/components/AppButton.vue';
 import AppListPage from 'src/components/AppListPage.vue';
 import AppTable from 'src/components/AppTable.vue';
-import CreateTaskDialog from 'src/components/task/CreateTaskDialog.vue';
 import SearchField from 'src/components/SearchField.vue';
+import CreateTaskDialog from 'src/components/task/CreateTaskDialog.vue';
+import TaskStatusConfirmDialog from 'src/components/task/TaskStatusConfirmDialog.vue';
+import EditTaskDialog from 'src/components/task/EditTaskDialog.vue';
 
 import { QTableColumn, useQuasar } from 'quasar';
 import { Priority, Status, TaskListItem } from 'src/schemas/task.schemas';
@@ -101,7 +135,7 @@ const { t } = useI18n();
 const $q = useQuasar();
 const formatDate = useDateLocalizer();
 const tasks = ref<TaskListItem[]>([]);
-
+const pagination = ref({ sortBy: 'dateTime', descending: true });
 function getPriority(priority: string): {
   color: string;
   icon: string;
@@ -129,6 +163,12 @@ function getStatus(status: string): {
   icon: string;
   label: string;
 } {
+  if (status === Status.DELAYED)
+    return {
+      color: 'deep-orange-14',
+      icon: 'hourglass_bottom',
+      label: t('common.status.delayed'),
+    };
   if (status === Status.COMPLETED)
     return {
       color: 'green',
@@ -137,13 +177,13 @@ function getStatus(status: string): {
     };
   if (status === Status.IN_PROGRESS)
     return {
-      color: 'orange',
-      icon: 'hourglass_bottom',
+      color: 'deep-purple-5',
+      icon: 'hourglass_top',
       label: t('common.status.inProgress'),
     };
   if (status === Status.PENDING)
     return {
-      color: 'deep-orange-14',
+      color: 'orange',
       icon: 'warning',
       label: t('common.status.pending'),
     };
@@ -172,8 +212,11 @@ const columns = computed<QTableColumn<TaskListItem>[]>(() => [
   {
     name: 'dueDate',
     label: t('common.fields.dueDate'),
-    field: (row) => formatDate.value(row.dueDate),
+    field: 'dueDate',
     align: 'center',
+    format: (val) => formatDate.value(val),
+    sortable: true,
+    sort: (a, b) => new Date(b).getTime() - new Date(a).getTime(),
   },
   {
     name: 'status',
@@ -193,6 +236,27 @@ const columns = computed<QTableColumn<TaskListItem>[]>(() => [
 function onCreateTask() {
   $q.dialog({
     component: CreateTaskDialog,
+  }).onOk(async () => await loadTasks());
+}
+
+function onCompleteTask(taskId: string) {
+  $q.dialog({
+    component: TaskStatusConfirmDialog,
+    componentProps: { taskId, isStarting: false },
+  }).onOk(async () => await loadTasks());
+}
+
+function onStartTask(taskId: string) {
+  $q.dialog({
+    component: TaskStatusConfirmDialog,
+    componentProps: { taskId, isStarting: true },
+  }).onOk(async () => await loadTasks());
+}
+
+function onEditTask(taskId: string) {
+  $q.dialog({
+    component: EditTaskDialog,
+    componentProps: { taskId },
   }).onOk(async () => await loadTasks());
 }
 

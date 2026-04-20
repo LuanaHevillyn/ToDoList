@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 export function getHistoryType(actionType: HistoryAction, entity: string): string {
     const { t } = useI18n();
 
-    return t(`common.history.${actionType.toLowerCase()}`, { entity });
+    return t(`common.history.action.${actionType.toLowerCase()}`, { entity });
 }
 
 export function getHistoryMessage(row: HistoryListItem): string {
@@ -30,5 +30,6 @@ export function getHistoryMessage(row: HistoryListItem): string {
     if (row.actionType === HistoryAction.UPDATE && field?.field) return fieldMap[field.field]?.() ?? '';
     if (row.actionType === HistoryAction.DELETE) return t('common.history.category.deleted', { name });
     if (row.actionType === HistoryAction.INCREMENT) return t('common.history.category.incremented', { name });
+    if (row.actionType === HistoryAction.DECREMENT) return t('common.history.category.decremented', { name });
     return '';
 }

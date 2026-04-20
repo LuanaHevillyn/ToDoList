@@ -150,3 +150,22 @@ function addIncrementTaskCountActionToHistory(category: CategoryListItem, action
     actionType,
   });
 }
+
+export async function decrementCategoryTaskCount(id: string): Promise<void> {
+  const categories = await getAllCategories();
+  const index = categories.findIndex(category => category.id === id);
+  if (index === -1) throw new Error('Categoria não encontrada');
+
+  if (categories[index].numberOfTasks > 0)  categories[index].numberOfTasks -= 1;
+  localStorage.setItem('Categories', JSON.stringify(categories));
+  addDecrementTaskCountActionToHistory(categories[index], HistoryAction.DECREMENT)
+}
+
+function addDecrementTaskCountActionToHistory(category: CategoryListItem, actionType: HistoryAction) {
+  addHistoryItem({
+    actionDescription: {},
+    categoryName: category.name,
+    dateTime: new Date(),
+    actionType,
+  });
+}
