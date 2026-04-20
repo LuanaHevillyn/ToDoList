@@ -59,8 +59,15 @@ export const common = {
             delete: 'Delete Category',
             deleteQuestion: 'Are you sure you want to delete the category "{name}"?',
             deleteWarning: 'This action cannot be undone.',
+        },
 
-            history: 'View History',
+        history: {
+            view: 'View History',
+            deleteHistoryItem: 'Delete registry',
+            deleteHistory: 'Clean history',
+            deleteAllQuestion: 'Are you sure you want to clean all the history?',
+            deleteItemQuestion: 'Are you sure you want to delete this history item?',
+            deleteWarning: 'This action cannot be undone.',
         },
 
         save: 'Save',
@@ -93,6 +100,10 @@ export const common = {
             created: 'Category created successfully!',
             updated: 'Category updated successfully!',
             deleted: 'Category deleted successfully!',
+        },
+        history: {
+            itemDeleted: 'History item deleted!',
+            allDeleted: 'Clean history!',
         }
     },
 

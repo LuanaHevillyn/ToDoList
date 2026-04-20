@@ -20,9 +20,10 @@ export type ChangedFieldItem = {
 };
 
 export const historyListItemSchema = object({
+  id: string().required(),
   dateTime: date().required(),
   actionType: mixed<HistoryAction>().oneOf(Object.values(HistoryAction)).required(),
-  categoryName: string().required(),
+  name: string().required(),
   actionDescription: object({
     field: mixed<CategoryField>().oneOf(Object.values(CategoryField)).notRequired(),
     oldValue: string().nullable(),

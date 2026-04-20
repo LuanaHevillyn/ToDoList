@@ -59,10 +59,17 @@ export const common = {
             delete: 'Excluir Categoria',
             deleteQuestion: 'Tem certeza que deseja excluir a categoria "{name}"?',
             deleteWarning: 'Essa ação não poderá ser desfeita.',
-
-            history: 'Ver Histórico',
         },
 
+        history: {
+            view: 'Ver Histórico',            
+            deleteHistoryItem: 'Excluir registro',
+            deleteHistory: 'Limpar histórico',
+            deleteAllQuestion: 'Tem certeza que deseja limpar todo o histórico?',
+            deleteItemQuestion: 'Deseja excluir o seguinte item do histórico?',
+            deleteWarning: 'Essa ação não poderá ser desfeita.',
+        },
+           
         save: 'Salvar',
         cancel: 'Cancelar',
         confirm: 'Confirmar',
@@ -93,6 +100,10 @@ export const common = {
             created: 'Categoria criada com sucesso!',
             updated: 'Categoria editada com sucesso!',
             deleted: 'Categoria deletada com sucesso!',
+        },
+        history: {
+            itemDeleted: 'Item do histórico deletado!',
+            allDeleted: 'Histórico limpo!',
         }
     },
 

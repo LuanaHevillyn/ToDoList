@@ -54,6 +54,13 @@ export async function updateTask(request: UpdateTaskFormRequest): Promise<void> 
   if (index === -1) throw new Error('Tarefa não encontrada');
 
   const oldTask = tasks[index];
+  if (
+    JSON.stringify(oldTask.category) === JSON.stringify(request.category) &&
+    oldTask.dueDate.toString() === new Date(request.dueDate).toISOString() &&
+    oldTask.name === request.name &&
+    oldTask.priority === request.priority
+  ) throw new Error('Nenhuma alteração foi realizada');
+
   if (oldTask.category.id !== request.category.id) {
     await decrementCategoryTaskCount(oldTask.category.id)
     await incrementCategoryTaskCount(request.category.id)

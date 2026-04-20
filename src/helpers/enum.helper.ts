@@ -1,15 +1,18 @@
 import { CategoryField, HistoryAction, HistoryListItem } from 'src/schemas/history.schemas';
 import { useI18n } from 'vue-i18n';
 
-export function getHistoryType(actionType: HistoryAction, entity: string): string {
+export function getHistoryType(actionType: HistoryAction | null, entity: string): string {
     const { t } = useI18n();
+    if (!actionType) return '';
 
     return t(`common.history.action.${actionType.toLowerCase()}`, { entity });
 }
 
-export function getHistoryMessage(row: HistoryListItem): string {
+export function getHistoryMessage(row: HistoryListItem | null): string {
     const { t } = useI18n();
-    const name = row.categoryName;
+    if (!row) return '';
+
+    const name = row.name;
     const field = row.actionDescription;
 
     const fieldMap = {

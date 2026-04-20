@@ -6,7 +6,7 @@
           rounded
           color="deep-purple-1"
           text-color="deep-purple-6"
-          icon="bi-tags"
+          icon="edit"
         />
 
         <div class="column">
@@ -34,7 +34,7 @@
         >
           <template #prepend>
             <div class="input-icon">
-              <q-icon name="bi-tag" color="deep-purple-6" />
+              <q-icon name="sym_o_label" color="deep-purple-6" />
             </div>
           </template>
         </q-input>
@@ -55,7 +55,7 @@
         >
           <template #prepend>
             <div class="input-icon">
-              <q-icon name="bi-file-text" color="deep-purple-6" />
+              <q-icon name="o_push_pin" color="deep-purple-6" />
             </div>
           </template> 
 
@@ -92,7 +92,7 @@
         >
           <template #prepend>
             <div class="input-icon">
-              <q-icon name="bi-file-text" color="deep-purple-6" />
+              <q-icon name="sym_o_stacks" color="deep-purple-6" />
             </div>
           </template>
 
@@ -119,7 +119,7 @@
         >
           <template #prepend>
             <div class="input-icon">
-              <q-icon name="bi-file-text" color="deep-purple-6" />
+              <q-icon name="sym_o_calendar_add_on" color="deep-purple-6" />
             </div>
           </template>
           <q-popup-proxy
@@ -215,19 +215,18 @@ function parseDate(dateString: string): Date {
 async function onSubmit() {
   errors.value = {};
   const parsedDueDate = parseDate(taskDueDate.value);
-  if(!taskCategory.value) return;
 
   const data = {
     id: props.taskId,
     name: taskName.value,
     priority: taskPriority.value as Priority,
-    category: taskCategory.value,
+    category: taskCategory.value ?? null,
     dueDate: parsedDueDate,
   };
 
   try {
-    await updateTaskFormSchema.validate(data, { abortEarly: false });
-    await handle(() => updateTask(data), t('common.feedback.task.updated'));
+    const validated = await updateTaskFormSchema.validate(data, { abortEarly: false });
+    await handle(() => updateTask(validated), t('common.feedback.task.updated'));
     onDialogOK();
   } catch (err) {
     if (err instanceof ValidationError) {

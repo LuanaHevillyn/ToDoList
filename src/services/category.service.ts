@@ -70,15 +70,33 @@ export async function getAllCategoriesHistories(): Promise<HistoryListItem[]> {
   return data ? JSON.parse(data) : [];
 }
 
+export async function getCategoryHistoryById(id: string): Promise<HistoryListItem> {
+  const categoriesHistories = await getAllCategoriesHistories();
+  const categoryHistory = categoriesHistories.find((history) => history.id === id)
+
+  if (!categoryHistory) throw new Error('Nenhum histórico de categoria encontrado');
+  return categoryHistory;
+}
+
+export async function deleteCategoryHistoryItem(id: string): Promise<void> {
+  const categoriesHistories = await getAllCategoriesHistories();
+  const index = categoriesHistories.findIndex(history => history.id === id);
+  if (index === -1) throw new Error('Histórico de categoria não encontrado');
+
+  categoriesHistories.splice(index, 1);
+  localStorage.setItem('CategoriesHistories', JSON.stringify(categoriesHistories));
+}
+
+export async function deleteAllCategoriesHistories(): Promise<void> {
+  localStorage.setItem('CategoriesHistories', JSON.stringify([]));
+}
+
 function addCreateActionToHistory(category: CategoryListItem, actionType: HistoryAction) {
   addHistoryItem({
-    actionDescription: {
-      field: null,
-      oldValue: null,
-      newValue: category.name,
-    },
+    id: crypto.randomUUID(),
+    actionDescription: { newValue: category.name },
     dateTime: new Date(),
-    categoryName: category.name,
+    name: category.name,
     actionType,
   });
 }
@@ -86,26 +104,28 @@ function addCreateActionToHistory(category: CategoryListItem, actionType: Histor
 function addUpdateActionToHistory(oldCategory: CategoryListItem, newCategory: CategoryListItem, actionType: HistoryAction) {
   if (oldCategory.name !== newCategory.name) {
     addHistoryItem({
+      id: crypto.randomUUID(),
       actionDescription: {
         field: CategoryField.NAME,
         oldValue: oldCategory.name,
         newValue: newCategory.name,
       },
       dateTime: new Date(),
-      categoryName: newCategory.name,
+      name: newCategory.name,
       actionType,
     });
   }
 
   if (oldCategory.description !== newCategory.description)  {   
     addHistoryItem({
+      id: crypto.randomUUID(),
       actionDescription: {
         field: CategoryField.DESCRIPTION,
         oldValue: oldCategory.description,
         newValue: newCategory.description,
       },
       dateTime: new Date(),
-      categoryName: newCategory.name,
+      name: newCategory.name,
       actionType,
     });
   }
@@ -113,12 +133,9 @@ function addUpdateActionToHistory(oldCategory: CategoryListItem, newCategory: Ca
 
 function addDeleteActionToHistory(category: CategoryListItem, actionType: HistoryAction) {
   addHistoryItem({
-    actionDescription: {
-      field: null,
-      oldValue: null,
-      newValue: category.name,
-    },
-    categoryName: category.name,
+    id: crypto.randomUUID(),
+    actionDescription: { newValue: category.name },
+    name: category.name,
     dateTime: new Date(),
     actionType,
   });
@@ -144,8 +161,9 @@ export async function incrementCategoryTaskCount(id: string): Promise<void> {
 
 function addIncrementTaskCountActionToHistory(category: CategoryListItem, actionType: HistoryAction) {
   addHistoryItem({
+    id: crypto.randomUUID(),
     actionDescription: {},
-    categoryName: category.name,
+    name: category.name,
     dateTime: new Date(),
     actionType,
   });
@@ -163,8 +181,9 @@ export async function decrementCategoryTaskCount(id: string): Promise<void> {
 
 function addDecrementTaskCountActionToHistory(category: CategoryListItem, actionType: HistoryAction) {
   addHistoryItem({
+    id: crypto.randomUUID(),
     actionDescription: {},
-    categoryName: category.name,
+    name: category.name,
     dateTime: new Date(),
     actionType,
   });
