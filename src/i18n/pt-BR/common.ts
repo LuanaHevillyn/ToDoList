@@ -18,8 +18,8 @@ export const common = {
         dueDate: 'Prazo de Conclusão',
         status: 'Status',
         priority: 'Prioridade',
-        description: 'Descrição',    
-        datetime: 'Data e Hora',    
+        description: 'Descrição',
+        dateTime: 'Data e Hora',
         actions: 'Ações | Ação',
     },
 
@@ -33,19 +33,44 @@ export const common = {
         category: 'Categoria é obrigatória',
     },
 
+    placeholder: {
+        name: 'Digite o nome',
+        priority: 'Selecione a prioridade',
+        dueDate: 'Selecione o prazo de conclusão',
+        description: 'Digite a descrição',
+        category: 'Selecione a categoria',
+    },
+
     actions: {
         task: {
             add: 'Nova Tarefa',
+            addDescription: 'Preencha os campos para adicionar uma tarefa.',
+
+            edit: 'Editar Tarefa',
+            editDescription: 'Preencha os campos para editar a tarefa selecionada.',
         },
         category: {
             add: 'Nova Categoria',
+            addDescription: 'Preencha os campos para adicionar uma categoria.',
+
             edit: 'Editar Categoria',
+            editDescription: 'Preencha os campos para editar a categoria selecionada.',
+
             delete: 'Excluir Categoria',
+            deleteQuestion: 'Tem certeza que deseja excluir a categoria "{name}"?',
+            deleteWarning: 'Essa ação não poderá ser desfeita.',
+
             history: 'Ver Histórico',
         },
+
+        save: 'Salvar',
+        cancel: 'Cancelar',
+        confirm: 'Confirmar',
+        close: 'Fechar',
     },
 
     status: {
+        delayed: 'Atrasada',
         completed: 'Concluída',
         inProgress: 'Em Andamento',
         pending: 'Pendente',
@@ -62,6 +87,7 @@ export const common = {
     feedback: {
         task: {
             created: 'Tarefa criada com sucesso!',
+            updated: 'Tarefa editada com sucesso!',
         },
         category: {
             created: 'Categoria criada com sucesso!',
@@ -77,17 +103,21 @@ export const common = {
     },
 
     history: {
-        create: '{entity} criada.',
-        update: '{entity} atualizada.',
-        delete: '{entity} excluída.',
-        increment: 'Número de tarefas atualizado.',
+        action: {
+            create: '{entity} criada.',
+            update: '{entity} atualizada.',
+            delete: '{entity} excluída.',
+            increment: 'Número de tarefas aumentado.',
+            decrement: 'Número de tarefas diminuido.',
+        },
 
         category: {
             created: 'A categoria "{name}" foi criada.',
             nameUpdated: 'Nome alterado de "{oldName}" para "{newName}".',
             descriptionUpdated: 'Descrição alterada de "{oldDescription}" para "{newDescription}".',
             deleted: 'A categoria "{name}" foi deletada.',
-            incremented: 'A contagem de tarefas da categoria "{name}" foi incrementado.',
+            incremented: 'A contagem de tarefas da categoria "{name}" foi incrementada.',
+            decremented: 'A contagem de tarefas da categoria "{name}" foi decrementada.',
         }
     },
 };

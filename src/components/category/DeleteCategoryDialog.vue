@@ -1,27 +1,47 @@
 <template>
-    <app-dialog ref="dialogRef" persistent>
-        <template #title>
-            <div class="title-container">
-                <q-avatar size="100px" round color="deep-orange-2" text-color="red-5" icon="delete" />
+  <app-dialog ref="dialogRef" persistent>
+    <template #title>
+      <div class="title-container">
+        <q-avatar
+          size="100px"
+          round
+          color="deep-orange-2"
+          text-color="red-5"
+          icon="delete"
+        />
 
-                <span class="q-mt-md text-subtitle1 text-weight-medium">{{ $t('common.actions.category.delete') }}</span>
-            </div>
-        </template>
+        <span class="q-mt-md text-subtitle1 text-weight-medium">{{
+          $t('common.actions.category.delete')
+        }}</span>
+      </div>
+    </template>
 
-        <template #form>
-            <div class="row justify-center q-my-lg">
-            <span>Tem certeza que deseja excluir a categoria '<strong class="text-weight-medium">{{ categoryDetail?.name }}</strong>'?</span>
-            <span class="q-mt-sm">Essa ação não poderá ser desfeita</span>
-        </div>
-        </template>
+    <template #form>
+      <div class="row justify-center q-my-lg">
+        <span>{{ $t('common.actions.category.deleteQuestion', { name: categoryDetail?.name}) }} </span
+        >
+        <span class="q-mt-sm">{{
+          $t('common.actions.category.deleteWarning')
+        }}</span>
+      </div>
+    </template>
 
-        <template #actions>
-            <div class="row justify-end">
-                <app-button class="button q-mr-sm" label="Cancelar" outline @click="onDialogHide" />
-                <app-button class="button" label="Confirmar" @click="onDelete" />
-            </div>
-        </template>
-    </app-dialog>
+    <template #actions>
+      <div class="row justify-end">
+        <app-button
+          class="button q-mr-sm"
+          :label="t('common.actions.cancel')"
+          outline
+          @click="onDialogHide"
+        />
+        <app-button
+          class="button"
+          :label="t('common.actions.confirm')"
+          @click="onDelete"
+        />
+      </div>
+    </template>
+  </app-dialog>
 </template>
 
 <script setup lang="ts">
@@ -44,32 +64,34 @@ const { handle } = useHandleAsync();
 const { t } = useI18n();
 
 async function onDelete() {
-    if(!categoryDetail.value) return;
+  if (!categoryDetail.value) return;
 
-    await handle(() => deleteCategory(requestCategoryId.value), t('common.feedback.category.deleted'));
-    onDialogOK();
+  await handle(
+    () => deleteCategory(requestCategoryId.value),
+    t('common.feedback.category.deleted')
+  );
+  onDialogOK();
 }
 
 const loadCategoryDetail = async () => {
-    const result = await handle(() => getCategoryById(props.categoryId));
-    if (!result) return;
+  const result = await handle(() => getCategoryById(props.categoryId));
+  if (!result) return;
 
-    categoryDetail.value = { ...result };
-    requestCategoryId.value = result.id;
+  categoryDetail.value = { ...result };
+  requestCategoryId.value = result.id;
 };
 
 onMounted(() => {
-    loadCategoryDetail();
+  loadCategoryDetail();
 });
 </script>
 
 <style scoped lang="scss">
 .title-container {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>

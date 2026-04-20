@@ -5,6 +5,7 @@ export enum HistoryAction {
   UPDATE = 'UPDATE',
   DELETE = 'DELETE',
   INCREMENT = 'INCREMENT',
+  DECREMENT = 'DECREMENT',
 }
 
 export enum CategoryField {

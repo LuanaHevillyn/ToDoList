@@ -1,8 +1,8 @@
 <template>
-    <app-page>
-      <dashboard-top-cards :cards="dashboardCardsData" />
-      <dashboard-chart-cards />
-    </app-page>
+  <app-page>
+    <dashboard-top-cards :cards="dashboardCardsData" />
+    <dashboard-chart-cards />
+  </app-page>
 </template>
 
 <script setup lang="ts">

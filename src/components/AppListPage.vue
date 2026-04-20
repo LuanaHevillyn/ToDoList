@@ -14,7 +14,9 @@
 <script setup lang="ts">
 import { QPageProps } from 'quasar';
 
-withDefaults(defineProps<QPageProps & { hasSeparator?: boolean }>(), { hasSeparator: false });
+withDefaults(defineProps<QPageProps & { hasSeparator?: boolean }>(), {
+  hasSeparator: false,
+});
 </script>
 
 <style scoped lang="scss">

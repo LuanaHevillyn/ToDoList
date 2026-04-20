@@ -57,7 +57,7 @@
             <div class="input-icon">
               <q-icon name="bi-file-text" color="deep-purple-6" />
             </div>
-          </template>
+          </template> 
 
           <template v-slot:option="{ itemProps, opt }">
             <q-item v-bind="itemProps">
@@ -69,12 +69,9 @@
                   align="middle"
                   dense
                   rounded
-                  :color="getPriorityColor(opt.value).color"
+                  :color="getPriority(opt.value).color"
                 >
-                  <q-icon
-                    :name="getPriorityColor(opt.value).icon"
-                    color="white"
-                  />
+                  <q-icon :name="getPriority(opt.value).icon" color="white" />
                 </q-badge>
               </q-item-section>
             </q-item>
@@ -89,8 +86,8 @@
           :label="t('common.placeholder.category')"
           color="deep-purple-6"
           outlined
-          :error="!!errors.category"
-          :error-message="errors.category"
+          :error="!!errors.categoryId"
+          :error-message="errors.categoryId"
           option-label="name"
         >
           <template #prepend>
@@ -118,7 +115,7 @@
           outlined
           :error="!!errors.dueDate"
           :error-message="errors.dueDate"
-          @update:model-value="showDatePicker = true"
+          @click="showDatePicker = true"
         >
           <template #prepend>
             <div class="input-icon">
@@ -167,35 +164,42 @@
 </template>
 
 <script setup lang="ts">
-import { useHandleAsync } from 'src/helpers/handleAsync.helper';
+import { CategoryListItem } from 'src/schemas/category.schemas';
 import AppButton from '../AppButton.vue';
 import AppDialog from '../AppDialog.vue';
 
 import { QInput, useDialogPluginComponent } from 'quasar';
-import { CategoryListItem } from 'src/schemas/category.schemas';
-import { createTaskFormSchema, Priority } from 'src/schemas/task.schemas';
-import { getAllCategories } from 'src/services/category.service';
+import { useHandleAsync } from 'src/helpers/handleAsync.helper';
+import {
+  Priority,
+  TaskListItem,
+  updateTaskFormSchema,
+} from 'src/schemas/task.schemas';
+import { getTaskById, updateTask } from 'src/services/task.service';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ValidationError } from 'yup';
-import { createTask } from 'src/services/task.service';
+import { getAllCategories } from 'src/services/category.service';
+import { useDateLocalizer } from 'src/helpers/date.helper';
 
+const props = defineProps<{ taskId: string }>();
 const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent();
-const categories = ref<CategoryListItem[]>([]);
+const taskDetail = ref<TaskListItem>();
 const taskName = ref('');
 const taskPriority = ref('');
 const taskCategory = ref<CategoryListItem>();
 const taskDueDate = ref('');
+const categories = ref<CategoryListItem[]>([]);
 const showDatePicker = ref(false);
-
-const { handle } = useHandleAsync();
-const { t } = useI18n();
+const formatDate = useDateLocalizer();
 const errors = ref<{
   name?: string;
   priority?: string;
-  category?: string;
+  categoryId?: string;
   dueDate?: string;
 }>({});
+const { handle } = useHandleAsync();
+const { t } = useI18n();
 
 const priorityOptions = Object.values(Priority).map((value) => ({
   label: t(`common.priority.${value.toLowerCase()}`),
@@ -211,9 +215,10 @@ function parseDate(dateString: string): Date {
 async function onSubmit() {
   errors.value = {};
   const parsedDueDate = parseDate(taskDueDate.value);
-  if (!taskCategory.value) return;
-  
+  if(!taskCategory.value) return;
+
   const data = {
+    id: props.taskId,
     name: taskName.value,
     priority: taskPriority.value as Priority,
     category: taskCategory.value,
@@ -221,8 +226,8 @@ async function onSubmit() {
   };
 
   try {
-    await createTaskFormSchema.validate(data, { abortEarly: false });
-    await handle(() => createTask(data), t('common.feedback.task.created'));
+    await updateTaskFormSchema.validate(data, { abortEarly: false });
+    await handle(() => updateTask(data), t('common.feedback.task.updated'));
     onDialogOK();
   } catch (err) {
     if (err instanceof ValidationError) {
@@ -234,7 +239,7 @@ async function onSubmit() {
   }
 }
 
-function getPriorityColor(priority: string): { color: string; icon: string } {
+function getPriority(priority: string): { color: string; icon: string } {
   if (priority === Priority.HIGH)
     return { color: 'deep-orange-14', icon: 'keyboard_double_arrow_up' };
   if (priority === Priority.MEDIUM)
@@ -257,7 +262,19 @@ function getDueDateOptions(pickedDate: string) {
   return date >= today;
 }
 
+const loadTaskDetail = async () => {
+  const result = await handle(() => getTaskById(props.taskId));
+  if (!result) return;
+
+  taskDetail.value = { ...result };
+  taskName.value = result.name;
+  taskPriority.value = result.priority;
+  taskCategory.value = result.category;
+  taskDueDate.value = formatDate.value(result.dueDate);
+};
+
 onMounted(() => {
+  loadTaskDetail();
   loadCategoryOptions();
 });
 </script>

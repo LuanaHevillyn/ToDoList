@@ -5,20 +5,51 @@
     </template>
     <template #actions>
       <search-field v-model="filter" size="35" />
-      <app-button icon="add" :label="$t('common.actions.category.add')" class="q-py-sm" @click="onCreateCategory" />
+      <app-button
+        icon="add"
+        :label="$t('common.actions.category.add')"
+        class="q-py-sm"
+        @click="onCreateCategory"
+      />
     </template>
 
     <template #table>
-      <app-table :columns="columns" :rows="categories" :filter="filter">
+      <app-table
+        :columns="columns"
+        :rows="categories"
+        :filter="filter"
+        :pagination="pagination"
+      >
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <app-button flat no-caps icon="edit" class="q-px-xs" color="grey-10" @click="onEditCategory(props.row.id)"/>
-            <app-button flat no-caps icon="delete_outline" class="q-px-xs" color="deep-orange-14" @click="onDeleteCategory(props.row.id)" />
+            <app-button
+              flat
+              no-caps
+              icon="edit"
+              class="q-px-xs"
+              color="grey-10"
+              @click="onEditCategory(props.row.id)"
+            />
+            <app-button
+              flat
+              no-caps
+              icon="delete_outline"
+              class="q-px-xs"
+              color="deep-orange-14"
+              @click="onDeleteCategory(props.row.id)"
+            />
           </q-td>
         </template>
       </app-table>
-      <app-button class="q-mt-sm" flat color="deep-purple-6" :label="$t('common.actions.category.history')" no-caps
-        icon="bi-hourglass-split" @click="onHistory" />
+      <app-button
+        class="q-mt-sm"
+        flat
+        color="deep-purple-6"
+        :label="$t('common.actions.category.history')"
+        no-caps
+        icon="bi-hourglass-split"
+        @click="onHistory"
+      />
     </template>
   </app-list-page>
 </template>
@@ -45,6 +76,7 @@ const { t } = useI18n();
 const $q = useQuasar();
 const formatDate = useDateLocalizer();
 const categories = ref<CategoryListItem[]>([]);
+const pagination = { sortBy: 'dateTime', descending: true };
 const columns = computed<QTableColumn<CategoryListItem>[]>(() => [
   {
     name: 'name',
@@ -61,8 +93,11 @@ const columns = computed<QTableColumn<CategoryListItem>[]>(() => [
   {
     name: 'createdAt',
     label: t('common.fields.createdAt'),
-    field: (row) => formatDate.value(row.createdAt),
+    field: 'createdAt',
     align: 'center',
+    format: (val) => formatDate.value(val),
+    sortable: true,
+    sort: (a, b) => new Date(b).getTime() - new Date(a).getTime(),
   },
   {
     name: 'numberOfTasks',
@@ -89,14 +124,14 @@ function onEditCategory(categoryId: string) {
   $q.dialog({
     component: EditCategoryDialog,
     componentProps: { categoryId },
-  }).onOk(async () =>  await loadCategories());
+  }).onOk(async () => await loadCategories());
 }
 
 function onDeleteCategory(categoryId: string) {
   $q.dialog({
     component: DeleteCategoryDialog,
     componentProps: { categoryId },
-  }).onOk(async () =>  await loadCategories());
+  }).onOk(async () => await loadCategories());
 }
 
 function onHistory() {
@@ -105,7 +140,7 @@ function onHistory() {
   });
 }
 
-const  loadCategories =async () => {
+const loadCategories = async () => {
   categories.value = await getAllCategories();
 };
 

@@ -1,7 +1,6 @@
 <template>
   <q-dialog ref="dialogRef" class="app-dialog" persistent>
     <q-card class="q-pa-lg" bordered :style="{ maxWidth: maxWidth }">
-
       <div class="q-mb-md flex">
         <slot name="title"></slot>
       </div>
