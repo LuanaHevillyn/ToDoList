@@ -6,7 +6,7 @@
           rounded
           color="deep-purple-1"
           text-color="deep-purple-6"
-          icon="bi-tags"
+          icon="sym_o_add_task"
         />
 
         <div class="column">
@@ -34,7 +34,7 @@
         >
           <template #prepend>
             <div class="input-icon">
-              <q-icon name="bi-tag" color="deep-purple-6" />
+              <q-icon name="sym_o_label" color="deep-purple-6" />
             </div>
           </template>
         </q-input>
@@ -55,7 +55,7 @@
         >
           <template #prepend>
             <div class="input-icon">
-              <q-icon name="bi-file-text" color="deep-purple-6" />
+              <q-icon name="o_push_pin" color="deep-purple-6" />
             </div>
           </template>
 
@@ -81,7 +81,7 @@
           </template>
         </q-select>
 
-        <span class="text-body2">{{ t('common.titles.category') }} *</span>
+        <span class="text-body2">{{ t('common.titles.category', 2) }} *</span>
         <q-select
           dense
           v-model="taskCategory"
@@ -95,7 +95,7 @@
         >
           <template #prepend>
             <div class="input-icon">
-              <q-icon name="bi-file-text" color="deep-purple-6" />
+              <q-icon name="sym_o_stacks" color="deep-purple-6" />
             </div>
           </template>
 
@@ -114,6 +114,7 @@
           v-model="taskDueDate"
           :label="t('common.placeholder.dueDate')"
           color="deep-purple-6"
+          input-class="cursor-pointer"
           readonly
           outlined
           :error="!!errors.dueDate"
@@ -122,7 +123,7 @@
         >
           <template #prepend>
             <div class="input-icon">
-              <q-icon name="bi-file-text" color="deep-purple-6" />
+              <q-icon name="sym_o_calendar_add_on" color="deep-purple-6" />
             </div>
           </template>
           <q-popup-proxy
@@ -211,18 +212,17 @@ function parseDate(dateString: string): Date {
 async function onSubmit() {
   errors.value = {};
   const parsedDueDate = parseDate(taskDueDate.value);
-  if (!taskCategory.value) return;
   
   const data = {
     name: taskName.value,
     priority: taskPriority.value as Priority,
-    category: taskCategory.value,
+    category: taskCategory.value ?? null,
     dueDate: parsedDueDate,
   };
 
-  try {
-    await createTaskFormSchema.validate(data, { abortEarly: false });
-    await handle(() => createTask(data), t('common.feedback.task.created'));
+  try {      
+    const validated = await createTaskFormSchema.validate(data, { abortEarly: false });  
+    await handle(() => createTask(validated), t('common.feedback.task.created'));
     onDialogOK();
   } catch (err) {
     if (err instanceof ValidationError) {

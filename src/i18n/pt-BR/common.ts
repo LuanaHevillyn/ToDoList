@@ -48,6 +48,10 @@ export const common = {
 
             edit: 'Editar Tarefa',
             editDescription: 'Preencha os campos para editar a tarefa selecionada.',
+
+            delete: 'Excluir Tarefa',
+            deleteQuestion: 'Tem certeza que deseja excluir a tarefa "{name}"?',
+            deleteWarning: 'Essa ação não poderá ser desfeita.',
         },
         category: {
             add: 'Nova Categoria',
@@ -59,8 +63,15 @@ export const common = {
             delete: 'Excluir Categoria',
             deleteQuestion: 'Tem certeza que deseja excluir a categoria "{name}"?',
             deleteWarning: 'Essa ação não poderá ser desfeita.',
+        },
 
-            history: 'Ver Histórico',
+        history: {
+            view: 'Ver Histórico',
+            deleteHistoryItem: 'Excluir registro',
+            deleteHistory: 'Limpar histórico',
+            deleteAllQuestion: 'Tem certeza que deseja limpar todo o histórico?',
+            deleteItemQuestion: 'Deseja excluir o seguinte item do histórico?',
+            deleteWarning: 'Essa ação não poderá ser desfeita.',
         },
 
         save: 'Salvar',
@@ -88,11 +99,16 @@ export const common = {
         task: {
             created: 'Tarefa criada com sucesso!',
             updated: 'Tarefa editada com sucesso!',
+            deleted: 'Tarefa deletada com sucesso!',
         },
         category: {
             created: 'Categoria criada com sucesso!',
             updated: 'Categoria editada com sucesso!',
             deleted: 'Categoria deletada com sucesso!',
+        },
+        history: {
+            itemDeleted: 'Item do histórico deletado!',
+            allDeleted: 'Histórico limpo!',
         }
     },
 

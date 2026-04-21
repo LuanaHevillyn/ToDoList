@@ -48,6 +48,7 @@
               icon="delete"
               class="q-px-xs"
               color="deep-orange-14"
+              @click="onDeleteItemHistory(props.row.id)"
             />
           </q-td>
         </template>
@@ -55,7 +56,15 @@
     </template>
 
     <template #actions>
-      <div class="flex justify-end q-mt-md">
+      <div class="flex justify-between q-mt-md">
+        <app-button
+          color="deep-orange-10"
+          :label="t('common.actions.history.deleteHistory')"
+          outline
+          no-caps
+          :disable="!hasHistories"
+          @click="onDeleteAllHistory"
+        />
         <app-button
           class="button q-mr-sm"
           :label="t('common.actions.close')"
@@ -72,8 +81,10 @@ import AppButton from 'src/components/AppButton.vue';
 import AppTable from 'src/components/AppTable.vue';
 import AppDialog from '../AppDialog.vue';
 import SearchField from '../SearchField.vue';
+import DeleteHistoryItemDialog from 'src/components/history/DeleteHistoryItemDialog.vue';
+import DeleteHistoryDialog from 'src/components/history/DeleteHistoryDialog.vue';
 
-import { QTableColumn, useDialogPluginComponent } from 'quasar';
+import { QTableColumn, useDialogPluginComponent, useQuasar } from 'quasar';
 import { useDateTimeLocalizer } from 'src/helpers/date.helper';
 import { getHistoryMessage, getHistoryType } from 'src/helpers/enum.helper';
 import { HistoryAction, HistoryListItem } from 'src/schemas/history.schemas';
@@ -82,11 +93,13 @@ import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+const $q = useQuasar();
 const formatDate = useDateTimeLocalizer();
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 const filter = ref('');
 const pagination = ref({ sortBy: 'dateTime', descending: true });
 const categoriesHistories = ref<HistoryListItem[]>([]);
+const hasHistories = computed(() => categoriesHistories.value.length > 0);
 const columns = computed<QTableColumn<HistoryListItem>[]>(() => [
   {
     name: 'dateTime',
@@ -98,9 +111,9 @@ const columns = computed<QTableColumn<HistoryListItem>[]>(() => [
     sort: (a, b) => new Date(b).getTime() - new Date(a).getTime(),
   },
   {
-    name: 'categoryName',
+    name: 'name',
     label: t('common.titles.category', 2),
-    field: 'categoryName',
+    field: 'name',
     align: 'left',
   },
   {
@@ -144,5 +157,19 @@ function getHistory(priority: string): { color: string; icon: string } {
   if (priority === HistoryAction.DECREMENT)
     return { color: 'deep-orange-6', icon: 'remove' };
   return { color: '', icon: '' };
+}
+
+function onDeleteItemHistory(historyId: string) {
+  $q.dialog({
+    component: DeleteHistoryItemDialog,
+    componentProps: { historyId, isCategory: true },
+  }).onOk(async () => await loadCategoriesHistories());
+}
+
+function onDeleteAllHistory() {
+  $q.dialog({
+    component: DeleteHistoryDialog,
+    componentProps: { categoriesHistories, isCategory: true },
+  }).onOk(async () => await loadCategoriesHistories());
 }
 </script>

@@ -54,6 +54,13 @@ export async function updateTask(request: UpdateTaskFormRequest): Promise<void> 
   if (index === -1) throw new Error('Tarefa não encontrada');
 
   const oldTask = tasks[index];
+  if (
+    JSON.stringify(oldTask.category) === JSON.stringify(request.category) &&
+    oldTask.dueDate.toString() === new Date(request.dueDate).toISOString() &&
+    oldTask.name === request.name &&
+    oldTask.priority === request.priority
+  ) throw new Error('Nenhuma alteração foi realizada');
+
   if (oldTask.category.id !== request.category.id) {
     await decrementCategoryTaskCount(oldTask.category.id)
     await incrementCategoryTaskCount(request.category.id)
@@ -69,4 +76,17 @@ export async function updateTask(request: UpdateTaskFormRequest): Promise<void> 
 
   tasks[index] = updatedTask;
   localStorage.setItem('Tasks', JSON.stringify(tasks));
+}
+
+export async function deleteTask(id: string): Promise<void> {
+  const tasks = await getAllTasks();
+  const index = tasks.findIndex(task => task.id === id);
+  if (index === -1) throw new Error('Tarefa não encontrada');
+
+  const task = tasks[index];
+  if (task.status === Status.IN_PROGRESS) throw new Error('É proibido excluir tarefas em andamento.');
+
+  tasks.splice(index, 1);
+  localStorage.setItem('Tasks', JSON.stringify(tasks));
+  decrementCategoryTaskCount(task.category.id)
 }

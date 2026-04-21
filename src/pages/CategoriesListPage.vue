@@ -45,7 +45,7 @@
         class="q-mt-sm"
         flat
         color="deep-purple-6"
-        :label="$t('common.actions.category.history')"
+        :label="$t('common.actions.history.view')"
         no-caps
         icon="bi-hourglass-split"
         @click="onHistory"
