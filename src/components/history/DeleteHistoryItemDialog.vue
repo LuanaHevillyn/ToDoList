@@ -70,7 +70,10 @@ import AppButton from '../AppButton.vue';
 import AppDialog from '../AppDialog.vue';
 
 import { useDialogPluginComponent } from 'quasar';
-import { getHistoryMessage, getHistoryType } from 'src/helpers/enum.helper';
+import {
+  getHistoryDescription,
+  getHistoryConfig,
+} from 'src/helpers/enum.helper';
 import { useHandleAsync } from 'src/helpers/handleAsync.helper';
 import { HistoryListItem } from 'src/schemas/history.schemas';
 import {
@@ -79,6 +82,10 @@ import {
 } from 'src/services/category.service';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import {
+  deleteTaskHistoryItem,
+  getTaskHistoryById,
+} from 'src/services/task.service';
 
 const props = defineProps<{ historyId: string; isCategory: boolean }>();
 const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent();
@@ -87,12 +94,15 @@ const { t } = useI18n();
 const formatDate = useDateTimeLocalizer();
 const historyDetail = ref<HistoryListItem>();
 const requestHistoryId = ref();
+const entity = props.isCategory ? 'Categoria' : 'Tarefa';
 const historyName = computed(() => historyDetail.value?.name);
 const historyType = computed(() =>
-  getHistoryType(historyDetail.value?.actionType ?? null, 'categoria')
+  historyDetail.value?.actionType
+    ? getHistoryConfig(historyDetail.value?.actionType, entity).label
+    : ''
 );
 const historyDescription = computed(() =>
-  getHistoryMessage(historyDetail.value ?? null)
+  historyDetail.value ? getHistoryDescription(historyDetail.value) : ''
 );
 const historyDateAndTime = computed(() =>
   historyDetail.value?.dateTime
@@ -102,16 +112,25 @@ const historyDateAndTime = computed(() =>
 
 async function onDelete() {
   if (!historyDetail.value) return;
-  if (props.isCategory)
-    await handle(
-      () => deleteCategoryHistoryItem(requestHistoryId.value),
-      t('common.feedback.history.itemDeleted')
-    );
+
+  props.isCategory
+    ? await handle(
+        () => deleteCategoryHistoryItem(requestHistoryId.value),
+        t('common.feedback.history.itemDeleted')
+      )
+    : await handle(
+        () => deleteTaskHistoryItem(requestHistoryId.value),
+        t('common.feedback.history.itemDeleted')
+      );
   onDialogOK();
 }
 
-const loadCategoryHistoryDetail = async () => {
-  const result = await handle(() => getCategoryHistoryById(props.historyId));
+const loadHistoryDetail = async () => {
+  const result = await handle(() =>
+    props.isCategory
+      ? getCategoryHistoryById(props.historyId)
+      : getTaskHistoryById(props.historyId)
+  );
   if (!result) return;
 
   historyDetail.value = { ...result };
@@ -119,7 +138,7 @@ const loadCategoryHistoryDetail = async () => {
 };
 
 onMounted(() => {
-  if (props.isCategory) loadCategoryHistoryDetail();
+  loadHistoryDetail();
 });
 </script>
 

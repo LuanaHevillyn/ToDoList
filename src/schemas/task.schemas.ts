@@ -21,6 +21,7 @@ export enum Status {
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
   DELAYED = 'DELAYED',
+  NONE = 'NONE',
 }
 
 export const createTaskFormSchema = object({

@@ -6,7 +6,7 @@ export const common = {
     },
 
     titles: {
-        task: 'Tarefas',
+        task: 'Tarefas | Tarefa',
         category: 'Categorias | Categoria',
         history: 'Histórico de {entity}',
     },
@@ -125,6 +125,16 @@ export const common = {
             delete: '{entity} excluída.',
             increment: 'Número de tarefas aumentado.',
             decrement: 'Número de tarefas diminuido.',
+        },
+
+        task: {
+            created: 'A tarefa "{name}" foi criada.',
+            nameUpdated: 'Nome alterado de "{oldName}" para "{newName}".',
+            priorityUpdated: 'Prioridade alterado de "{oldPriority}" para "{newPriority}".',
+            dueDateUpdated: 'Prazo alterado de "{oldDueDate}" para "{newDueDate}".',
+            categoryUpdated: 'Categoria alterada de "{oldCategory}" para "{newCategory}".',
+            statusUpdated: 'Status alterado de "{oldStatus}" para "{newStatus}".',
+            deleted: 'A tarefa "{name}" foi deletada.',
         },
 
         category: {

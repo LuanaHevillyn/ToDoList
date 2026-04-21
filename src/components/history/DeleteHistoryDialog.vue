@@ -10,20 +10,16 @@
           icon="sym_o_delete_history"
         />
 
-        <span class="q-mt-md text-subtitle1 text-weight-medium"
-          >{{
+        <span class="q-mt-md text-subtitle1 text-weight-medium">{{
           $t('common.actions.history.deleteHistory')
-        }}</span
-        >
+        }}</span>
       </div>
     </template>
 
     <template #form>
       <div class="q-my-lg">
         <span class="row justify-center q-mb-sm">
-          {{
-          $t('common.actions.history.deleteAllQuestion')
-        }}</span
+          {{ $t('common.actions.history.deleteAllQuestion') }}</span
         >
         <span class="row justify-center q-mt-sm">{{
           $t('common.actions.history.deleteWarning')
@@ -57,14 +53,20 @@ import { useDialogPluginComponent } from 'quasar';
 import { useHandleAsync } from 'src/helpers/handleAsync.helper';
 import { HistoryListItem } from 'src/schemas/history.schemas';
 import {
-    deleteAllCategoriesHistories,
-    getAllCategoriesHistories
+  deleteAllCategoriesHistories,
+  getAllCategoriesHistories,
 } from 'src/services/category.service';
+import {
+  deleteAllTasksHistories,
+  getAllTasksHistories,
+} from 'src/services/task.service';
 import { onMounted, ref } from 'vue';
-
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{ histories: HistoryListItem[], isCategory: boolean }>();
+const props = defineProps<{
+  histories: HistoryListItem[];
+  isCategory: boolean;
+}>();
 const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent();
 const historyDetail = ref<HistoryListItem[]>();
 
@@ -72,19 +74,27 @@ const { handle } = useHandleAsync();
 const { t } = useI18n();
 async function onDelete() {
   if (!historyDetail.value) return;
-  if (props.isCategory) await handle( () => deleteAllCategoriesHistories(), t('common.feedback.history.allDeleted'));
+  await handle(
+    () =>
+      props.isCategory
+        ? deleteAllCategoriesHistories()
+        : deleteAllTasksHistories(),
+    t('common.feedback.history.allDeleted')
+  );
   onDialogOK();
 }
 
-const loadCategoriesHistories = async () => {
-  const result = await handle(() => getAllCategoriesHistories());
+const loadHistories = async () => {
+  const result = await handle(() =>
+    props.isCategory ? getAllCategoriesHistories() : getAllTasksHistories()
+  );
   if (!result) return;
 
   historyDetail.value = { ...result };
 };
 
 onMounted(() => {
-    if(props.isCategory)  loadCategoriesHistories();
+  loadHistories();
 });
 </script>
 

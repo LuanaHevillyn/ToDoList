@@ -69,10 +69,10 @@
                   align="middle"
                   dense
                   rounded
-                  :color="getPriorityColor(opt.value).color"
+                  :color="getPriorityConfig(opt.value).color"
                 >
                   <q-icon
-                    :name="getPriorityColor(opt.value).icon"
+                    :name="getPriorityConfig(opt.value).icon"
                     color="white"
                   />
                 </q-badge>
@@ -180,6 +180,7 @@ import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ValidationError } from 'yup';
 import { createTask } from 'src/services/task.service';
+import { getPriorityConfig } from 'src/helpers/enum.helper';
 
 const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent();
 const categories = ref<CategoryListItem[]>([]);
@@ -232,15 +233,6 @@ async function onSubmit() {
       });
     }
   }
-}
-
-function getPriorityColor(priority: string): { color: string; icon: string } {
-  if (priority === Priority.HIGH)
-    return { color: 'deep-orange-14', icon: 'keyboard_double_arrow_up' };
-  if (priority === Priority.MEDIUM)
-    return { color: 'orange', icon: 'arrow_drop_up' };
-  if (priority === Priority.LOW) return { color: 'green', icon: 'remove' };
-  return { color: 'green', icon: 'remove' };
 }
 
 const loadCategoryOptions = async () => {
