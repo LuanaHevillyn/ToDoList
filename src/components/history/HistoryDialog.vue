@@ -3,7 +3,7 @@
     <template #title>
       <div class="fit row justify-between">
         <span class="text-h5 q-mt-sm">{{
-          $t('common.titles.history', { entity: 'categoria' })
+          $t('common.titles.history', { entity })
         }}</span>
         <search-field v-model="filter" size="35" class="" />
       </div>
@@ -12,7 +12,7 @@
     <template #form>
       <app-table
         :columns="columns"
-        :rows="categoriesHistories"
+        :rows="histories"
         :filter="filter"
         separator="none"
         virtual-scroll
@@ -25,18 +25,18 @@
               align="middle"
               rounded
               class="q-pa-xs text-deep-purple-6"
-              :color="getHistory(props.value).color"
+              :color="props.value.color"
               outline
             >
-              <q-icon :name="getHistory(props.value).icon" class="q-mr-xs" />
-              {{ getHistoryType(props.row.actionType, 'categoria') }}
+              <q-icon :name="props.value.icon" class="q-mr-xs" />
+              {{ props.value.label }}
             </q-badge>
           </q-td>
         </template>
 
         <template v-slot:body-cell-actionDescription="props">
           <q-td :props="props">
-            {{ getHistoryMessage(props.row) }}
+            {{ props.value }}
           </q-td>
         </template>
 
@@ -79,16 +79,20 @@
 <script setup lang="ts">
 import AppButton from 'src/components/AppButton.vue';
 import AppTable from 'src/components/AppTable.vue';
+import DeleteHistoryDialog from 'src/components/history/DeleteHistoryDialog.vue';
+import DeleteHistoryItemDialog from 'src/components/history/DeleteHistoryItemDialog.vue';
 import AppDialog from '../AppDialog.vue';
 import SearchField from '../SearchField.vue';
-import DeleteHistoryItemDialog from 'src/components/history/DeleteHistoryItemDialog.vue';
-import DeleteHistoryDialog from 'src/components/history/DeleteHistoryDialog.vue';
 
 import { QTableColumn, useDialogPluginComponent, useQuasar } from 'quasar';
 import { useDateTimeLocalizer } from 'src/helpers/date.helper';
-import { getHistoryMessage, getHistoryType } from 'src/helpers/enum.helper';
-import { HistoryAction, HistoryListItem } from 'src/schemas/history.schemas';
+import {
+  getHistoryConfig,
+  getHistoryDescription,
+} from 'src/helpers/enum.helper';
+import { HistoryListItem } from 'src/schemas/history.schemas';
 import { getAllCategoriesHistories } from 'src/services/category.service';
+import { getAllTasksHistories } from 'src/services/task.service';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -97,9 +101,11 @@ const $q = useQuasar();
 const formatDate = useDateTimeLocalizer();
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 const filter = ref('');
+const props = defineProps<{ isCategory: boolean }>();
+const entity = props.isCategory ? 'Categorias' : 'Tarefas';
 const pagination = ref({ sortBy: 'dateTime', descending: true });
-const categoriesHistories = ref<HistoryListItem[]>([]);
-const hasHistories = computed(() => categoriesHistories.value.length > 0);
+const histories = ref<HistoryListItem[]>([]);
+const hasHistories = computed(() => histories.value.length > 0);
 const columns = computed<QTableColumn<HistoryListItem>[]>(() => [
   {
     name: 'dateTime',
@@ -112,20 +118,22 @@ const columns = computed<QTableColumn<HistoryListItem>[]>(() => [
   },
   {
     name: 'name',
-    label: t('common.titles.category', 2),
+    label: props.isCategory
+      ? t('common.titles.category', 2)
+      : t('common.titles.task', 2),
     field: 'name',
     align: 'left',
   },
   {
     name: 'actionType',
     label: t('common.fields.actions', 2),
-    field: 'actionType',
+    field: (row) => getHistoryConfig(row.actionType, 'tarefa'),
     align: 'center',
   },
   {
     name: 'actionDescription',
     label: t('common.fields.description'),
-    field: 'actionDescription',
+    field: (row) => getHistoryDescription(row),
     align: 'left',
   },
   {
@@ -137,39 +145,29 @@ const columns = computed<QTableColumn<HistoryListItem>[]>(() => [
   },
 ]);
 
-const loadCategoriesHistories = async () => {
-  categoriesHistories.value = await getAllCategoriesHistories();
+const loadHistories = async () => {
+  histories.value = props.isCategory
+    ? await getAllCategoriesHistories()
+    : await getAllTasksHistories();
 };
 
 onMounted(() => {
-  loadCategoriesHistories();
+  loadHistories();
 });
 
-function getHistory(priority: string): { color: string; icon: string } {
-  if (priority === HistoryAction.CREATE)
-    return { color: 'green', icon: 'bi-plus-circle-fill' };
-  if (priority === HistoryAction.UPDATE)
-    return { color: 'deep-purple-2', icon: 'edit' };
-  if (priority === HistoryAction.DELETE)
-    return { color: 'deep-orange-10', icon: 'delete' };
-  if (priority === HistoryAction.INCREMENT)
-    return { color: 'deep-purple-2', icon: 'add' };
-  if (priority === HistoryAction.DECREMENT)
-    return { color: 'deep-orange-6', icon: 'remove' };
-  return { color: '', icon: '' };
-}
-
 function onDeleteItemHistory(historyId: string) {
+  const isCategory = props.isCategory;
   $q.dialog({
     component: DeleteHistoryItemDialog,
-    componentProps: { historyId, isCategory: true },
-  }).onOk(async () => await loadCategoriesHistories());
+    componentProps: { historyId, isCategory },
+  }).onOk(async () => await loadHistories());
 }
 
 function onDeleteAllHistory() {
+  const isCategory = props.isCategory;
   $q.dialog({
     component: DeleteHistoryDialog,
-    componentProps: { categoriesHistories, isCategory: true },
-  }).onOk(async () => await loadCategoriesHistories());
+    componentProps: { histories, isCategory },
+  }).onOk(async () => await loadHistories());
 }
 </script>

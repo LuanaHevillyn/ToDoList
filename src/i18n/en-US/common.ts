@@ -6,8 +6,8 @@ export const common = {
     },
 
     titles: {
-        task: 'Tasks',
-        category: 'Categories',
+        task: 'Tasks | Task',
+        category: 'Categories  | Category',
         history: 'History of {entity}',
     },
 
@@ -48,7 +48,7 @@ export const common = {
 
             edit: 'Edit Task',
             editDescription: 'Fill in the fields to edit the selected task.',
-        
+
             delete: 'Delete Task',
             deleteQuestion: 'Are you sure you want to delete the task "{name}"?',
             deleteWarning: 'This action cannot be undone.',
@@ -125,6 +125,16 @@ export const common = {
             delete: '{entity} deleted.',
             increment: 'Number of tasks increased.',
             decrement: 'Number of tasks decreased.',
+        },
+
+        task: {
+            created: 'The task "{name}" was created.',
+            nameUpdated: 'Name changed from "{oldName}" to "{newName}".',
+            priorityUpdated: 'Priority changed from "{oldPriority}" to "{newPriority}".',
+            dueDateUpdated: 'Due date changed from "{oldDueDate}" to "{newDueDate}".',
+            categoryUpdated: 'Category changed from "{oldCategory}" to "{newCategory}".',
+            statusUpdated: 'Status changed from "{oldStatus}" to "{newStatus}".',
+            deleted: 'The task "{name}" was deleted.',
         },
 
         category: {

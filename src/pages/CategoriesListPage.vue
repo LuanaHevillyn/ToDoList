@@ -62,7 +62,7 @@ import CreateCategoryDialog from 'src/components/category/CreateCategoryDialog.v
 import EditCategoryDialog from 'src/components/category/EditCategoryDialog.vue';
 import DeleteCategoryDialog from 'src/components/category/DeleteCategoryDialog.vue';
 import SearchField from 'src/components/SearchField.vue';
-import CategoriesHistoryDialog from 'src/components/category/CategoriesHistoryDialog.vue';
+import HistoryDialog from 'src/components/history/HistoryDialog.vue';
 
 import { QTableColumn, useQuasar } from 'quasar';
 import { useDateLocalizer } from 'src/helpers/date.helper';
@@ -136,7 +136,8 @@ function onDeleteCategory(categoryId: string) {
 
 function onHistory() {
   $q.dialog({
-    component: CategoriesHistoryDialog,
+    component: HistoryDialog,
+    componentProps: { isCategory: true },
   });
 }
 

@@ -20,7 +20,7 @@
       <div class="row justify-center">
         <span class="q-ma-xs text-center"
           >Deseja {{ action }} esta tarefa? O status será alterado para "<strong
-            >{{ getStatusLabel(status) }}</strong
+            >{{ getStatusConfig(status).label }}</strong
           >".</span
         >
 
@@ -29,7 +29,7 @@
           v-if="taskDetail?.status === Status.PENDING"
           >Caso o prazo de conclusão seja ultrapassado, o status será atualizado
           automaticamente para "<strong>{{
-            getStatusLabel(Status.DELAYED)
+            getStatusConfig(Status.DELAYED).label
           }}</strong
           >".</span
         >
@@ -64,6 +64,7 @@ import { Status, TaskListItem } from 'src/schemas/task.schemas';
 import { getTaskById, updateTaskStatusById } from 'src/services/task.service';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { getStatusConfig } from 'src/helpers/enum.helper';
 
 const props = defineProps<{ taskId: string; isStarting: boolean }>();
 const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent();
@@ -104,14 +105,6 @@ const loadTaskDetail = async () => {
 onMounted(() => {
   loadTaskDetail();
 });
-
-function getStatusLabel(status: string): string {
-  if (status === Status.DELAYED) return t('common.status.delayed');
-  if (status === Status.COMPLETED) return t('common.status.completed');
-  if (status === Status.IN_PROGRESS) return t('common.status.inProgress');
-  if (status === Status.PENDING) return t('common.status.pending');
-  return t('common.status.none');
-}
 </script>
 
 <style scoped lang="scss">
