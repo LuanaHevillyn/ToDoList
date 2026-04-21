@@ -47,7 +47,11 @@ export const common = {
             addDescription: 'Fill in the fields to add a task.',
 
             edit: 'Edit Task',
-            editDescription: 'Fill in the fields to edit the selected task.'
+            editDescription: 'Fill in the fields to edit the selected task.',
+        
+            delete: 'Delete Task',
+            deleteQuestion: 'Are you sure you want to delete the task "{name}"?',
+            deleteWarning: 'This action cannot be undone.',
         },
         category: {
             add: 'New Category',
@@ -95,6 +99,7 @@ export const common = {
         task: {
             created: 'Task created successfully!',
             updated: 'Task updated successfully!',
+            deleted: 'Task deleted successfully!',
         },
         category: {
             created: 'Category created successfully!',

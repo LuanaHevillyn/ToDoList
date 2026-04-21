@@ -77,3 +77,16 @@ export async function updateTask(request: UpdateTaskFormRequest): Promise<void> 
   tasks[index] = updatedTask;
   localStorage.setItem('Tasks', JSON.stringify(tasks));
 }
+
+export async function deleteTask(id: string): Promise<void> {
+  const tasks = await getAllTasks();
+  const index = tasks.findIndex(task => task.id === id);
+  if (index === -1) throw new Error('Tarefa não encontrada');
+
+  const task = tasks[index];
+  if (task.status === Status.IN_PROGRESS) throw new Error('É proibido excluir tarefas em andamento.');
+
+  tasks.splice(index, 1);
+  localStorage.setItem('Tasks', JSON.stringify(tasks));
+  decrementCategoryTaskCount(task.category.id)
+}

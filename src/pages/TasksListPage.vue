@@ -106,6 +106,7 @@
               icon="delete_outline"
               class="q-px-xs"
               color="deep-orange-14"
+              @click="onDeleteTask(props.row.id)"
             />
           </q-td>
         </template>
@@ -122,6 +123,7 @@ import SearchField from 'src/components/SearchField.vue';
 import CreateTaskDialog from 'src/components/task/CreateTaskDialog.vue';
 import TaskStatusConfirmDialog from 'src/components/task/TaskStatusConfirmDialog.vue';
 import EditTaskDialog from 'src/components/task/EditTaskDialog.vue';
+import DeleteTaskDialog from 'src/components/task/DeleteTaskDialog.vue';
 
 import { QTableColumn, useQuasar } from 'quasar';
 import { Priority, Status, TaskListItem } from 'src/schemas/task.schemas';
@@ -256,6 +258,13 @@ function onStartTask(taskId: string) {
 function onEditTask(taskId: string) {
   $q.dialog({
     component: EditTaskDialog,
+    componentProps: { taskId },
+  }).onOk(async () => await loadTasks());
+}
+
+function onDeleteTask(taskId: string) {
+  $q.dialog({
+    component: DeleteTaskDialog,
     componentProps: { taskId },
   }).onOk(async () => await loadTasks());
 }
