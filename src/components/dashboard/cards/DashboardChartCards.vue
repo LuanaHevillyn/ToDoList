@@ -50,6 +50,10 @@
 </template>
 
 <script setup lang="ts">
+import AnnualTaskProgressChart from '../charts/AnnualTaskProgressChart.vue';
+import MostUsedCategoriesChart from '../charts/MostUsedCategoriesChart.vue';
+import TasksByPriorityChart from '../charts/TasksByPriorityChart.vue';
+
 import { useHandleAsync } from 'src/helpers/handleAsync.helper';
 import {
   AnnualTaskProgress,
@@ -62,9 +66,6 @@ import {
   getMostUsedCategories,
 } from 'src/services/dashboard.service';
 import { computed, onMounted, ref } from 'vue';
-import AnnualTaskProgressChart from '../charts/AnnualTaskProgressChart.vue';
-import MostUsedCategoriesChart from '../charts/MostUsedCategoriesChart.vue';
-import TasksByPriorityChart from '../charts/TasksByPriorityChart.vue';
 
 const { handle } = useHandleAsync();
 const annualTasksProgress = ref<AnnualTaskProgress>();
