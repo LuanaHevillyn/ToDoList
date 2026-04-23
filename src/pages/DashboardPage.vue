@@ -9,6 +9,7 @@
 import AppPage from 'src/components/AppPage.vue';
 import DashboardTopCards from '../components/dashboard/cards/DashboardTopCards.vue';
 import DashboardChartCards from '../components/dashboard/cards/DashboardChartCards.vue';
+
 import { useHandleAsync } from 'src/helpers/handleAsync.helper';
 import { DashboardCards } from 'src/schemas/dashboard.schemas';
 import { getDashboardCards } from 'src/services/dashboard.service';

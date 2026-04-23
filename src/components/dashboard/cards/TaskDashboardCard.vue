@@ -72,6 +72,7 @@
 
 <script setup lang="ts">
 import AppButton from 'src/components/AppButton.vue';
+
 import { useHandleAsync } from 'src/helpers/handleAsync.helper';
 import { updateGoal } from 'src/services/dashboard.service';
 

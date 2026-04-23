@@ -18,10 +18,11 @@
 </template>
 
 <script setup lang="ts">
+import TaskDashboardCard from './TaskDashboardCard.vue';
+
 import { DashboardCards } from 'src/schemas/dashboard.schemas';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import TaskDashboardCard from './TaskDashboardCard.vue';
 
 const { t } = useI18n();
 const props = defineProps<{ cards: DashboardCards[] }>();
