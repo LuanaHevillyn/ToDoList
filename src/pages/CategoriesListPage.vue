@@ -4,7 +4,7 @@
       <span class="text-h4">{{ $t('common.titles.category') }}</span>
     </template>
     <template #actions>
-      <search-field v-model="filter" size="35" />
+      <search-field v-model="filter" />
       <app-button
         icon="add"
         :label="$t('common.actions.category.add')"

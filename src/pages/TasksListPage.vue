@@ -5,7 +5,7 @@
     </template>
 
     <template #actions>
-      <search-field v-model="filter" size="35" />
+      <search-field v-model="filter" />
       <app-button
         icon="add"
         :label="$t('common.actions.task.add')"
@@ -35,12 +35,6 @@
               />
             </q-badge>
             {{ props.value.label }}
-          </q-td>
-        </template>
-
-        <template v-slot:body-cell-category="props">
-          <q-td :props="props">
-            {{ props.value.name }}
           </q-td>
         </template>
 
@@ -167,6 +161,7 @@ const columns = computed<QTableColumn<TaskListItem>[]>(() => [
     name: 'category',
     label: t('common.titles.category', 2),
     field: 'category',
+    format: (val) => val.name,
     align: 'center',
   },
   {

@@ -5,7 +5,7 @@
         <span class="text-h5 q-mt-sm">{{
           $t('common.titles.history', { entity })
         }}</span>
-        <search-field v-model="filter" size="35" class="" />
+        <search-field v-model="filter" class="" />
       </div>
     </template>
 

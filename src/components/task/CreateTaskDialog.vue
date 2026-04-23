@@ -243,8 +243,8 @@ const loadCategoryOptions = async () => {
 };
 
 function getDueDateOptions(pickedDate: string) {
-  const date = new Date(pickedDate);
-  const today = new Date();
+  const date = new Date(pickedDate).setHours(0, 0, 0, 0);;
+  const today = new Date().setHours(0, 0, 0, 0);;
 
   return date >= today;
 }

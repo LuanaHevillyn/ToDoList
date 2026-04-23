@@ -1,5 +1,6 @@
 <template>
   <q-table
+    :dense="$q.screen.lt.md"
     :rows="rows"
     :columns="columns"
     row-key="id"
