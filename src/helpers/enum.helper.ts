@@ -162,7 +162,7 @@ export function getPriorityConfig(priority: string): {
 
     if (priority === Priority.HIGH)
         return {
-            color: 'deep-orange-14',
+            color: 'red',
             icon: 'keyboard_double_arrow_up',
             label: t('common.priority.high'),
         };

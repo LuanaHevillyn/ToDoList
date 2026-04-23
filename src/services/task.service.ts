@@ -22,17 +22,25 @@ export async function createTask(request: CreateTaskFormRequest): Promise<void> 
 export async function getAllTasks(): Promise<TaskListItem[]> {
   const data = localStorage.getItem('Tasks');
   const tasks = data ? JSON.parse(data) : [];
+  let hasChanges = false;
 
   tasks.forEach((task: TaskListItem) => {
-    if (new Date(task.dueDate) < new Date() && task.status === Status.IN_PROGRESS) {      
+    const today = new Date().setHours(0, 0, 0, 0);
+    const dueDate = new Date(task.dueDate).setHours(0, 0, 0, 0);
+
+    if (dueDate < today && task.status === Status.IN_PROGRESS) {
       task.status = Status.DELAYED;
       addUpdateStatusActionToHistory(task.name, Status.IN_PROGRESS, Status.DELAYED, HistoryAction.UPDATE);
+      hasChanges = true;
     }
-    if (new Date(task.dueDate) > new Date() && task.status === Status.DELAYED) {      
+    if (dueDate > today && task.status === Status.DELAYED) {
       task.status = Status.IN_PROGRESS;
       addUpdateStatusActionToHistory(task.name, Status.DELAYED, Status.IN_PROGRESS, HistoryAction.UPDATE);
+      hasChanges = true;
     }
   });
+
+  if (hasChanges) localStorage.setItem('Tasks', JSON.stringify(tasks));
   return tasks;
 }
 

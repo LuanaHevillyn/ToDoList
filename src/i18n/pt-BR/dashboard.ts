@@ -4,21 +4,20 @@ export const dashboard = {
         titles: {
             activities: 'Atividades',
             mostUsedCategories: 'Categorias Mais Usadas',
-            overdueActivitiesByCategory: 'Atividades Atrasadas por Categoria'
+            tasksByPriority: 'Atividades por Prioridade'
         }
     },
 
     cards: {
         titles: {
             completed: 'Concluídas',
-            inProgress: 'Em Andamento',
+            pending: 'Pendentes',
             overdue: 'Atrasadas',
-            deleted: 'Excluídas',
+            priorityHigh: 'Prioridade Alta',
         },
         footer: {
-            thisMonth: 'neste mês',
-            thisYear: 'neste ano',
-            goal: 'meta'
+            thisMonth: 'Neste mês',
+            goal: 'Meta'
         }
     },
 };

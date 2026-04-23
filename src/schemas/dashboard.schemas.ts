@@ -1,12 +1,13 @@
-import { array, InferType, number, object, string } from 'yup';
+import { array, InferType, mixed, number, object, string } from 'yup';
+import { Priority } from './task.schemas';
 
-export const taskDashboardCardItemSchema = object({
+export const dashboardCardItemSchema = object({
   goalId: number().required(),
-  tasksCompletedInTheMonth: number().required(),
-  tasksCompletedInTheMonthGoal: number().required(),
-  tasksOverdueInTheMonth: number().required(),
-  tasksInProgressInTheMonth: number().required(),
-  tasksDeletedInTheYear: number().required(),
+  tasksCompletedInTheMonth: number().nullable(),
+  cardGoal: number().nullable(),
+  tasksOverdueInTheMonth: number().nullable(),
+  tasksPendingInTheMonth: number().nullable(),
+  tasksWithPriorityHighInTheMonth: number().nullable(),
 });
 
 export const taskProgressItemSchema = object({
@@ -21,15 +22,18 @@ export const annualTaskProgressSchema = object({
   tasksOverdue: array(taskProgressItemSchema).required(),
 });
 
-export const overdueTaskByCategorySchema = array(
-  object({
-    categoryName: string().required(),
-    overdueTasks: number().required(),
-  })
-);
+export const tasksByPrioritySchema = object({
+  priority: mixed<Priority>().oneOf(Object.values(Priority)).required(),
+  tasks: number().required(),
+});
 
-export type TaskDashboardCardItem = InferType<typeof taskDashboardCardItemSchema>;
+export const mostUsedCategoriesSchema = object({
+  name: string().required(),
+  timesUsed: number().required(),
+});
+
+export type DashboardCards = InferType<typeof dashboardCardItemSchema>;
 export type TaskDashboardItem = InferType<typeof taskProgressItemSchema>;
 export type AnnualTaskProgress = InferType<typeof annualTaskProgressSchema>;
-export type OverdueTaskByCategory = InferType<typeof overdueTaskByCategorySchema>;
-
+export type TasksByPriority = InferType<typeof tasksByPrioritySchema>;
+export type MostUsedCategories = InferType<typeof mostUsedCategoriesSchema>;

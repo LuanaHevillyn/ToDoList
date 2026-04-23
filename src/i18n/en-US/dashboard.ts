@@ -3,22 +3,21 @@ export const dashboard = {
         titles: {
             activities: 'Activities',
             mostUsedCategories: 'Most Used Categories',
-            overdueActivitiesByCategory: 'Overdue Activities by Category'
+            tasksByPriority: 'Tasks by Priority'
         }
     },
 
     cards: {
         titles: {
             completed: 'Completed',
-            inProgress: 'In Progress',
+            pending: 'Pending',
             overdue: 'Overdue',
-            deleted: 'Deleted',
+            priorityHigh: 'Priority High',
         },
         
         footer: {
-            thisMonth: 'this month',
-            thisYear: 'this year',
-            goal: 'goal'
+            thisMonth: 'This month',
+            goal: 'Goal'
         }
     },
 };

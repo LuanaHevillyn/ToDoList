@@ -10,22 +10,23 @@
 </template>
 
 <script setup lang="ts">
+import { MostUsedCategories } from 'src/schemas/dashboard.schemas';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
   id: string;
-  categories: { categoryName: string; daysUsed: number }[];
+  categories: MostUsedCategories[];
 }>();
 
 const series = computed(() => {
-  if (!props.categories) return;
-  const data = props.categories.map((category) => category.daysUsed);
-  return [{ data }];
+  if (!props.categories) return [];
+  const data = props.categories.map((data) => data.timesUsed);
+  return [{ name: 'Tarefas relacionadas: ', data }];
 });
 
 const categories = computed(() => {
   if (!props.categories) return;
-  return props.categories.map((category) => category.categoryName);
+  return props.categories.map((data) => data.name);
 });
 
 const options = ref({
@@ -38,7 +39,7 @@ const options = ref({
       borderRadius: 2,
       borderRadiusApplication: 'end',
       horizontal: true,
-      barHeight: '40%',
+      barHeight: '30%',
     },
   },
 
@@ -50,8 +51,22 @@ const options = ref({
     enabled: true,
   },
   xaxis: {
-    categories: categories,
+    categories: categories.value,
   },
-  colors: ['purple'],
+  colors: ['#673ab7'],
+
+  responsive: [
+    {
+      breakpoint: 480,
+      options: {
+        chart: {
+          width: 200,
+        },
+        legend: {
+          position: 'bottom',
+        },
+      },
+    },
+  ],
 });
 </script>
