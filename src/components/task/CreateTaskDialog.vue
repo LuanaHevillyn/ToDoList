@@ -1,0 +1,300 @@
+<template>
+  <app-dialog ref="dialogRef" persistent>
+    <template #title>
+      <div class="row items-center q-gutter-md">
+        <q-avatar
+          rounded
+          color="deep-purple-1"
+          text-color="deep-purple-6"
+          icon="sym_o_add_task"
+        />
+
+        <div class="column">
+          <span class="text-h5">{{ $t('common.actions.task.add') }}</span>
+          <span class="text-caption text-grey-7">
+            {{ $t('common.actions.task.addDescription') }}
+          </span>
+        </div>
+      </div>
+    </template>
+
+    <template #form>
+      <q-form @submit.prevent.stop="onSubmit">
+        <span class="text-body2">{{ t('common.fields.name') }} *</span>
+        <q-input
+          dense
+          v-model="taskName"
+          :label="t('common.placeholder.name')"
+          color="deep-purple-6"
+          outlined
+          :error="!!errors.name"
+          :error-message="errors.name"
+          maxlength="50"
+          counter
+        >
+          <template #prepend>
+            <div class="input-icon">
+              <q-icon name="sym_o_label" color="deep-purple-6" />
+            </div>
+          </template>
+        </q-input>
+
+        <span class="text-body2">{{ t('common.fields.priority') }} *</span>
+        <q-select
+          dense
+          v-model="taskPriority"
+          :options="priorityOptions"
+          :label="t('common.placeholder.priority')"
+          color="deep-purple-6"
+          outlined
+          :error="!!errors.priority"
+          :error-message="errors.priority"
+          clearable
+          emit-value
+          map-options
+        >
+          <template #prepend>
+            <div class="input-icon">
+              <q-icon name="o_push_pin" color="deep-purple-6" />
+            </div>
+          </template>
+
+          <template v-slot:option="{ itemProps, opt }">
+            <q-item v-bind="itemProps">
+              <q-item-section>
+                <q-item-label>{{ opt.label }}</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-badge
+                  align="middle"
+                  dense
+                  rounded
+                  :color="getPriorityConfig(opt.value).color"
+                >
+                  <q-icon
+                    :name="getPriorityConfig(opt.value).icon"
+                    color="white"
+                  />
+                </q-badge>
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+
+        <span class="text-body2">{{ t('common.titles.category', 2) }} *</span>
+        <q-select
+          dense
+          v-model="taskCategory"
+          :options="categories"
+          :label="t('common.placeholder.category')"
+          color="deep-purple-6"
+          outlined
+          :error="!!errors.category"
+          :error-message="errors.category"
+          option-label="name"
+        >
+          <template #prepend>
+            <div class="input-icon">
+              <q-icon name="sym_o_stacks" color="deep-purple-6" />
+            </div>
+          </template>
+
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-italic text-grey">
+                Sem categorias disponível
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+
+        <span class="text-body2">{{ t('common.fields.dueDate') }} *</span>
+        <q-input
+          dense
+          v-model="taskDueDate"
+          :label="t('common.placeholder.dueDate')"
+          color="deep-purple-6"
+          input-class="cursor-pointer"
+          readonly
+          outlined
+          :error="!!errors.dueDate"
+          :error-message="errors.dueDate"
+          @update:model-value="showDatePicker = true"
+        >
+          <template #prepend>
+            <div class="input-icon">
+              <q-icon name="sym_o_calendar_add_on" color="deep-purple-6" />
+            </div>
+          </template>
+          <q-popup-proxy
+            v-model="showDatePicker"
+            transition-show="scale"
+            transition-hide="scale"
+          >
+            <q-date
+              :options="getDueDateOptions"
+              color="deep-purple-6"
+              v-model="taskDueDate"
+              mask="DD/MM/YYYY"
+            >
+              <div class="row items-center justify-end">
+                <app-button
+                  v-close-popup
+                  :label="t('common.actions.close')"
+                  flat
+                />
+              </div>
+            </q-date>
+          </q-popup-proxy>
+        </q-input>
+
+        <div class="flex justify-end q-mt-md">
+          <app-button
+            class="button q-mr-sm"
+            :label="t('common.actions.cancel')"
+            outline
+            @click="onDialogHide"
+          />
+
+          <app-button
+            class="button"
+            :label="t('common.actions.save')"
+            type="submit"
+          />
+        </div>
+      </q-form>
+    </template>
+  </app-dialog>
+</template>
+
+<script setup lang="ts">
+import { useHandleAsync } from 'src/helpers/handleAsync.helper';
+import AppButton from '../AppButton.vue';
+import AppDialog from '../AppDialog.vue';
+
+import { QInput, useDialogPluginComponent } from 'quasar';
+import { CategoryListItem } from 'src/schemas/category.schemas';
+import { createTaskFormSchema, Priority } from 'src/schemas/task.schemas';
+import { getAllCategories } from 'src/services/category.service';
+import { onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { ValidationError } from 'yup';
+import { createTask } from 'src/services/task.service';
+import { getPriorityConfig } from 'src/helpers/enum.helper';
+
+const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent();
+const categories = ref<CategoryListItem[]>([]);
+const taskName = ref('');
+const taskPriority = ref('');
+const taskCategory = ref<CategoryListItem>();
+const taskDueDate = ref('');
+const showDatePicker = ref(false);
+
+const { handle } = useHandleAsync();
+const { t } = useI18n();
+const errors = ref<{
+  name?: string;
+  priority?: string;
+  category?: string;
+  dueDate?: string;
+}>({});
+
+const priorityOptions = Object.values(Priority).map((value) => ({
+  label: t(`common.priority.${value.toLowerCase()}`),
+  value,
+}));
+
+function parseDate(dateString: string): Date {
+  const [day, month, year] = dateString.split('/').map(Number);
+
+  return new Date(year, month - 1, day);
+}
+
+async function onSubmit() {
+  errors.value = {};
+  const parsedDueDate = parseDate(taskDueDate.value);
+  
+  const data = {
+    name: taskName.value,
+    priority: taskPriority.value as Priority,
+    category: taskCategory.value ?? null,
+    dueDate: parsedDueDate,
+  };
+
+  try {      
+    const validated = await createTaskFormSchema.validate(data, { abortEarly: false });  
+    await handle(() => createTask(validated), t('common.feedback.task.created'));
+    onDialogOK();
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      err.inner.forEach((e) => {
+        const field = e.path as keyof typeof errors.value;
+        errors.value[field] = t(`common.validation.${e.message}`);
+      });
+    }
+  }
+}
+
+const loadCategoryOptions = async () => {
+  const result = await handle(() => getAllCategories());
+  if (!result) return;
+
+  categories.value = result;
+};
+
+function getDueDateOptions(pickedDate: string) {
+  const date = new Date(pickedDate).setHours(0, 0, 0, 0);;
+  const today = new Date().setHours(0, 0, 0, 0);;
+
+  return date >= today;
+}
+
+onMounted(() => {
+  loadCategoryOptions();
+});
+</script>
+
+<style scoped lang="scss">
+:deep(.input-icon) {
+  display: flex;
+  align-items: center;
+
+  background: #f5f5f5;
+  height: 100%;
+  margin-left: 13px;
+  padding-right: 5px;
+}
+
+:deep(.q-field__control) {
+  padding: 0 !important;
+  background: #f5f5f5;
+}
+
+:deep(.q-field__label) {
+  padding-left: 15px;
+}
+
+:deep(.q-field__native) {
+  background: #ffffff;
+  margin: 2px;
+  padding-left: 10px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+:deep(.q-select .q-field__control) {
+  padding: 0 !important;
+  background: #f5f5f5;
+}
+
+:deep(.q-select .q-field__native) {
+  background: #ffffff;
+  margin-top: -12px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+:deep(.q-field__native span) {
+  margin-top: 15px;
+}
+</style>
